@@ -1,4 +1,4 @@
-# {The Taproom Custom Theme Starter}
+Custom Theme starter
 
 Default branch = `main`
 
