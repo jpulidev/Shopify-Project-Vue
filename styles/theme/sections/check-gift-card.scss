@@ -1,0 +1,141 @@
+.--gift-card {
+  background: $color-brand-superlight-gray;
+  margin-top: -35px;
+  padding: 80px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  &.hero {
+    display: block;
+    height: auto;
+  }
+
+  @media only screen and (min-width: 750px) {
+    margin-top: -55px;
+    padding-top: 55px;
+  }
+}
+
+.check-gift-card {
+  background: $color-white;
+  border-radius: 18px;
+  box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+  padding: 50px 100px 60px;
+
+  @include media-query($small) {
+    padding: 50px 20px 60px;
+  }
+
+  @include media-query($medium-up) {
+    margin: 0 auto;
+  }
+
+  @include media-query($large-up) {
+    width: 70%;
+    max-width: 770px;
+  }
+}
+
+.gifted-result {
+  padding: 2em;
+  margin-bottom: 2em;
+  border-radius: 12px;
+  background: $color-brand-superlight-gray;
+
+  a {
+    font-size: 12px;
+    color: $color-brand;
+  }
+
+  &--remaining {
+    font-size: 2rem;
+    font-weight: 800;
+  }
+}
+
+form.gift-card {
+  width: 300px;
+  max-width: 80%;
+  margin: 0 auto;
+
+  label {
+    display: block;
+    padding-top: 30px;
+    color: $color-brand-gray;
+    margin: 0 auto 5px;
+    position: relative;
+
+    &.invalid {
+      input {
+        background-color: #fcf3f2;
+        border-color: #c80000;
+
+        &:focus,
+        &:valid {
+          border-color: #c80000;
+        }
+      }
+    }
+
+    .label-text {
+      cursor: text;
+      font-size: 16px;
+      line-height: 16px;
+      transform: translateY(-37px);
+      transition: all 0.3s;
+      text-align: left;
+      padding-left: 15px;
+    }
+
+    input {
+      line-height: 40px;
+      border-color: $color-brand-off-white;
+      outline: 0;
+      padding: 12px 15px 0;
+      transition: all 0.3s;
+      width: 300px;
+      text-transform: uppercase;
+
+      &:focus,
+      &:valid {
+        max-width: 100%;
+        border-color: $color-brand;
+        // width: 400px;
+
+        + .label-text {
+          font-size: 11px;
+          transform: translateY(-50px);
+        }
+      }
+    }
+  }
+
+  .clear {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-15%);
+    color: $color-brand;
+    cursor: pointer;
+  }
+
+  .error-state {
+    background: #fae6e6;
+    font-size: 12px;
+    text-align: left;
+    padding: 10px 14px 12px;
+    margin: 0 0 2em;
+    border-radius: 3px;
+
+    a {
+      text-decoration: underline;
+    }
+
+    &.visible {
+      display: block;
+    }
+  }
+}

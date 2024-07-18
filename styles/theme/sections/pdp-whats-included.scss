@@ -1,0 +1,100 @@
+.whats-included {
+  &__inner {
+    text-align: center;
+    margin-top: 100px;
+    @media only screen and (max-width: 768px) {
+      margin-top: 50px;
+    }
+    p {
+      margin-bottom: 0;
+    }
+  }
+
+  &__items-wrapper {
+    width: calc(100% + 60px);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: stretch;
+
+    flex-wrap: wrap;
+    margin: 60px -30px 20px;
+
+    @media only screen and (max-width: 768px) {
+      flex-direction: column;
+      margin: 30px -15px 0;
+      width: 100%;
+    }
+  }
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    text-align: center;
+    margin: 30px 15px 30px;
+    flex-basis: 30%;
+    padding: 30px 49px 82px;
+    border-radius: 9px;
+    border: solid 1px #e1e4e6;
+
+    @media only screen and (max-width: 768px) {
+      padding: 26px 23px;
+      flex-basis: 100%;
+      width: 100%;
+      margin: 4px 15px;
+    }
+    &-img {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    &-container {
+      @media only screen and (max-width: 768px) {
+        padding-left: 10px;
+        flex-basis: 70%;
+      }
+    }
+    &-name {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    &-desc {
+      text-align: left;
+      ul {
+        position: relative;
+        li {
+          position: relative;
+          font-family: $font-body;
+          font-weight: normal;
+          font-size: 16px;
+          margin: 8px 0;
+          &::before {
+            position: absolute;
+            content: "";
+            top: 7px;
+            left: -20px;
+            display: block;
+            width: 16px;
+            height: 12px;
+            background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 10 20 6' width='16' height='12' stroke='none' fill='%2300AAFF'><polygon points='14.3020442 6 5.25204675 14.5628122 1.69795582 11.210479 0 12.8189134 5.25204675 17.7894737 16 7.61904311' fill='%2300AAFF'></polygon></svg>")
+              no-repeat;
+          }
+        }
+      }
+    }
+  }
+  &__disclaimer {
+    font-size: 12px;
+    max-width: 80%;
+    margin: auto;
+    @media only screen and (max-width: 768px) {
+      margin-top: 20px;
+    }
+    a {
+      color: $color-brand;
+    }
+  }
+}

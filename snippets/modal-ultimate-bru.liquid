@@ -1,0 +1,23 @@
+<div class="micro-modal micromodal-slide" id="ultimate-bru-modal" aria-hidden="true">
+    <div class="micro-modal__overlay" tabindex="-1" data-micromodal-close>
+      <div class="micro-modal__container" role="dialog" aria-modal="true" aria-labelledby="ultimate-bru-modal-title">
+        <header class="micro-modal__header">
+            {% render 'icon-warning' %}
+          <h2 class="micro-modal__title" id="ultimate-bru-modal-title">
+          {{ settings.ultimate_bru_headline }}
+          </h2>
+          <button class="micro-modal__close" aria-label="Close modal" data-micromodal-close></button>
+        </header>
+        <main class="micro-modal__content" id="ultimate-bru-modal-content">
+          {{ settings.ultimate_bru_body }}
+        </main>
+        <footer class="micro-modal__footer">
+            <button aria-label="Close modal" data-micromodal-close class="button button--primary button--primary-inverse">
+               {{ settings.ultimate_bru_back }}
+            </button>
+        </footer>
+      </div>
+    </div>
+  </div>
+  
+  

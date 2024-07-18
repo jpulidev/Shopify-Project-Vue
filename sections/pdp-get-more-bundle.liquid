@@ -1,0 +1,130 @@
+{%- assign current_variant = product.selected_or_first_available_variant -%}
+{%- assign productUpsell = product.metafields.accentuate.get_more_with | capitalize -%}
+
+{%- assign pairedProducts = product.metafields.accentuate.get_more_with | split: "|" -%} 
+{% render 'modal-pdp-upsell', current_product: product, pairedProducts: pairedProducts, provinceLabel: "Province" %}
+
+<div class="get-more-with__inner">   
+    <div class="page-width">
+        <h2 class="title">{{ section.settings.title }} {{ product.title }} + {% for prod in pairedProducts %}{{ all_products[prod].title }}{% unless forloop.last%} + {% endunless %}{% endfor %}</h2>
+        <div>{{ section.settings.desc }}</div>
+
+        <div class="get-more-with__product-wrapper">
+            <div class="get-more-with__product-cards">
+                {% for prod in pairedProducts %}
+                <div class="grid-view-item product-card" data-product-id='{{ all_products[prod].first_available_variant.id }}' data-product-price='{{ all_products[prod].first_available_variant.price | money_without_currency }}''>        
+                    <a class="grid-view-item__link grid-view-item__image-container full-width-link" href="{{ all_products[prod].url }}">
+                        <span class="visually-hidden">{{ all_products[prod].title }}</span> 
+                      </a>           
+                    <div class="product-card__image-with-placeholder-wrapper" data-image-loading-animation>
+                      <div class="grid-view-item__image-wrapper product-card__image-wrapper js">
+                        <div style="padding-top:66%;">
+                          <img class="grid-view-item__image lazyload"
+                                alt="{{ all_products[prod].featured_image.alt }}"
+                                data-src="{{ all_products[prod].featured_image | img_url: '1400x800' }}"
+                                data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                                data-aspectratio="{{ all_products[prod].featured_image.aspect_ratio }}"
+                                data-sizes="auto"
+                                data-image>
+                        </div>
+                      </div>
+                    </div>                  
+                    <div class="product-card__inner">
+                        <div class="h4 grid-view-item__title product-card__title" aria-hidden="true">{{ all_products[prod].title }}</div>
+                        <div class="product-card__inner-rating">
+                            {% if all_products[prod].first_available_variant.sku != blank %}
+                            <div class="list-view-item" data-product-stars>
+                            <!-- TrustBox widget - Product Mini Multisource -->
+                            <div style="pointer-events: none;" class="trustpilot-widget" data-locale="en-US" data-template-id="577258fb31f02306e4e3aaf9" data-businessunit-id="5df96c4c7890b800016789c7" data-style-height="24px" data-style-width="100%" data-theme="light" data-tags="SelectedReview" data-sku="{{ all_products[prod].first_available_variant.sku }}" data-star-color="#0AA9FF" data-font-family="Open Sans" data-text-color="#232D37" data-no-reviews="hide" data-scroll-to-list="false">
+                                <a href="https://www.trustpilot.com/review/insidetracker.com" target="_blank" rel="noopener">Trustpilot</a>
+                            </div>
+                            <!-- End TrustBox widget -->
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="get-more-with__plus">
+                    {% include 'icon-plus' %}
+                </div>
+                {% endfor %}
+                <div class="grid-view-item product-card" data-current-product data-product-price="{{current_variant.price |  money_without_currency}}">                   
+                    <div class="product-card__image-with-placeholder-wrapper" data-image-loading-animation>
+                      <div class="grid-view-item__image-wrapper product-card__image-wrapper js">
+                        <div style="padding-top:66%;">
+                          <img class="grid-view-item__image lazyload"
+                                alt="{{ product.featured_image.alt }}"
+                                data-src="{{ product.featured_image | img_url: '1400x800' }}"
+                                data-widths="[180, 360, 540, 720, 900, 1080, 1296, 1512, 1728, 2048]"
+                                data-aspectratio="{{ product.featured_image.aspect_ratio }}"
+                                data-sizes="auto"
+                                data-image>
+                        </div>
+                      </div>
+                    </div>                  
+                    <div class="product-card__inner">
+                        <div class="h4 grid-view-item__title product-card__title" aria-hidden="true">{{ product.title }}</div>
+                        <div class="product-card__inner-rating">
+                            {% if product.first_available_variant.sku != blank %}
+                            <div class="list-view-item" data-product-stars>
+                            <!-- TrustBox widget - Product Mini Multisource -->
+                            <div style="pointer-events: none;" class="trustpilot-widget" data-locale="en-US" data-template-id="577258fb31f02306e4e3aaf9" data-businessunit-id="5df96c4c7890b800016789c7" data-style-height="24px" data-style-width="100%" data-theme="light" data-tags="SelectedReview" data-sku="{{product.first_available_variant.sku}}" data-star-color="#0AA9FF" data-font-family="Open Sans" data-text-color="#232D37" data-no-reviews="hide" data-scroll-to-list="false">
+                            </div>
+                            <!-- End TrustBox widget -->
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="get-more-with__price-column">
+                <div class="get-more-with__price-column--price">
+                    {{current_variant.price |  money_without_currency}}
+                </div>
+                <div class="get-more-with__price-column--details">
+                    Precise recommendations to help you optimize your wellness.
+                </div>
+                <div class="get-more-with__price-column--button">
+                    <button class="button button--primary" data-custom-open="pdp-upsell">
+                        {{ 'products.product.add_to_cart' | t }}
+                    </button>
+                </div> 
+                {%comment%}
+                <div class="get-more-with__price-column--button">
+                    <button class="button button--primary" id="getMoreProductsCart">
+                        {{ 'products.product.add_to_cart' | t }}
+                    </button>
+                </div>
+                {%endcomment%}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    {% for prod in pairedProducts %}
+        {{ all_products[prod] | json}}
+    {% endfor %}
+</script>
+
+
+{% schema %}
+{
+    "name": "Get More With",
+    "class": "get-more-with",
+    "settings": [
+        {
+            "id": "title",
+            "type": "text",
+            "label": "Title",
+            "default": "Get more with"
+        },
+        {
+            "id": "desc",
+            "type": "richtext",
+            "label": "Description",
+            "default": "<p>Your DNA doesn't change, but your blood biomarkers do. Combine DNA with a blood test for an even more powerful report, including targeted nutrition recommendations.</p>"
+        }
+    ]
+}
+{% endschema %}

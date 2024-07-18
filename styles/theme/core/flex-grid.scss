@@ -1,0 +1,13 @@
+.flex-grid {
+  @include media-query($medium-up) {
+    display: flex;
+  }
+
+  &__item {
+    @include media-query($medium-up) {
+      &.-one-third {
+        flex: 0 0 33%;
+      }
+    }
+  }
+}

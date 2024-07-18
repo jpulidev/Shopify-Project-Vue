@@ -1,0 +1,57 @@
+@charset 'UTF-8';
+
+/**
+* Shopify Starter Theme SCSS -- The Taproom
+*
+ * eg: @import "./starter/core/forms";
+ */
+
+// Settings
+@import "./theme/variables";
+
+// Tools
+@import "./starter/tools/mixins";
+@import "./starter/tools/functions";
+@import "../node_modules/rfs/sass";
+@import "../node_modules/swiper/swiper-bundle";
+
+// Core
+@import "./starter/core/forms";
+@import "./theme/core/embedded";
+@import "./theme/core/flex-grid";
+@import "./theme/core/responsive-grid";
+@import "./starter/core/helpers";
+@import "./theme/core/layout";
+@import "./starter/core/media";
+@import "./starter/core/responsive-tables";
+@import "./starter/core/rte";
+@import "./theme/core/typography";
+
+// Components
+@import "./theme/components/buttons";
+@import "./theme/components/navigation";
+@import "./theme/components/icons";
+@import "./theme/components/micromodal";
+@import "./theme/components/popover";
+
+// Sections
+@import "./theme/sections/header";
+@import "./theme/sections/check-gift-card";
+@import "./theme/sections/pdp-announcement-bar";
+@import "./theme/sections/pdp-how-it-works";
+@import "./theme/sections/pdp-upload-vs-kit";
+@import "./theme/sections/pdp-get-more-bundle";
+@import "./theme/sections/pdp-whats-included";
+@import "./theme/sections/product-biomarkers";
+@import "./theme/sections/footer";
+@import "./theme/sections/pdp-faq";
+@import "./theme/sections/faq-base";
+@import "./theme/sections/find-a-lab";
+
+// Pages
+@import "./theme/pages/product";
+@import "./theme/pages/cart";
+@import "./theme/pages/home";
+@import "./theme/pages/compare";
+// Templates
+//

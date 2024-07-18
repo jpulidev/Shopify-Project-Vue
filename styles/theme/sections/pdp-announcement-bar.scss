@@ -1,0 +1,14 @@
+.pdp-announcement-bar {
+  &__inner {
+    background-color: #f5f5f5;
+    padding: 10px;
+    text-align: center;
+
+    color: #232d37;
+    font-size: 14px;
+    font-weight: 500;
+    a {
+      color: $color-brand;
+    }
+  }
+}

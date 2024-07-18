@@ -1,0 +1,66 @@
+{% unless section.settings.hide %}
+    {% if product.metafields.whats_included.icon[0] %}
+        <div class="whats-included__inner">
+            <div class="page-width">
+                <h2 class="title">{{ section.settings.title }} {{product.title}}</h2>
+                <div>{{ section.settings.desc }}</div>
+
+                <div class="whats-included__items-wrapper">
+                    <!-- Loop through meta fields for whats included -->
+                    {% for i in product.metafields.whats_included.icon %}
+                        <div class="whats-included__item">
+                            <div class="whats-included__item-img">
+                                <img src="{{ product.metafields.whats_included.icon[forloop.index0].first.src }}" height="90" alt="{{ product.metafields.whats_included.title[forloop.index0 ] }}" />
+                            </div>
+                            
+                        <div class="whats-included__item-container">
+                                <div class="whats-included__item-name">
+                                    {{ product.metafields.whats_included.title[forloop.index0 ]}}
+                                </div>
+                                <div class="whats-included__item-desc">
+                                    {{ product.metafields.whats_included.description[forloop.index0 ]}}
+                                </div>
+                        </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <div class="whats-included__disclaimer">
+                    {{ section.settings.disclaimer }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endunless %}
+{% schema %}
+    {
+        "name": "What's Included",
+        "class": "whats-included",
+        "settings": [
+            {
+                "id": "title",
+                "type": "text",
+                "label": "Title",
+                "default": "What's included in your"
+            },
+            {
+                "id": "desc",
+                "type": "richtext",
+                "label": "Description",
+                "default": "<p>Our scientists have studied genetic markers that can impact important areas of wellness.</p><p>Your personalized DNA report reveals your genetic potential in these areas.</p>"
+            },
+            {
+                "id": "hide",
+                "type": "checkbox",
+                "label": "Hide What's Included",
+                "default": false
+            },
+            {
+                "id": "disclaimer",
+                "type": "richtext",
+                "label": "Disclaimer Text",
+                "default": "<p>*Your DNA analysis will include, at minimum, the above reports. Sometimes, the genotyping process omits genetic data that results in fewer markers for InsideTracker to analyze. See our <a href='/faqs'>FAQs</a> for more detail.</p>"
+            }
+        ]
+    }
+{% endschema %}

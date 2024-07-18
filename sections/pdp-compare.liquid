@@ -1,0 +1,76 @@
+<div class="page-width">
+  <h2 class="title">{{ section.settings.title }}</h2>
+</div>
+{%- assign app_type = 'compare-pdp' -%}
+<div id="vue-app-root" class="vue-subscription-app" data-app-type="{{ app_type }}" data-app-id="{{ section.id }}">
+  <script id="{{ section.id }}-{{ app_type }}">
+
+    let fullProductData = []
+    {% for product in collections.pdp-compare-plans.products %}
+        fullProductData.push({
+        product: {{ product | json }}, 
+        biomarkers: {{ product.metafields.biomarkers | json }}
+        })
+    {% endfor %}
+
+    window
+      .theme
+      .vue
+      .availableApps
+      .push({
+        type: "{{ app_type }}",
+        id: "{{ section.id }}",
+        data: {
+          "settings": {{ section.settings | json }},
+          "product": {{ product | json }},
+          "allProducts": [{% for product in collections.pdp-compare-plans.products %}{{ product | json }},{% endfor %}],
+          "allBiomarkers": [{% for product in collections.pdp-compare-plans.products %}{{ product.metafields.biomarkers | json }},{% endfor %}],
+          "productsWithBiomarkers": fullProductData,
+          "currentProduct": {{ product.id }},
+          "addToCartText": '{{ settings.add_to_cart_button }}',
+          "selectOptionsText": '{{ settings.select_options_button }}',
+          "viewDetailsText": '{{ settings.view_details_link }}',
+          "showReviews": {{ settings.show_product_reviews }},
+        }
+      });
+  </script>
+</div> 
+
+<div class="compare-products">
+  <p class="availability-info">*{{ settings.us_blood_testing_info_message }} <button class="text-link" data-us-blood-draw data-custom-open="us-blood-modal">{{ settings.us_blood_learn_more }}</button></p>
+</div>
+
+<div class="compare-products__description">
+  {{ section.settings.description }}
+</div>
+
+{% schema %}
+{
+  "name": "PDP - Compare Products",
+  "class": "compare-pdp",
+  "settings": [
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Title",
+      "default": "Compare blood plans"
+    },
+    {
+      "id": "description",
+      "type": "richtext",
+      "label": "Description",
+      "default": "<p>For a detailed comparison of included biomarkers <a href='/pages/compare-products'>click here</a>.</p>"
+    }
+  ],
+  "blocks": [
+    
+  ],
+"presets": [
+      {
+        "name": "PDP - Compare Products",
+        "category": "PDP"
+      }
+    ]
+}
+
+{% endschema %}

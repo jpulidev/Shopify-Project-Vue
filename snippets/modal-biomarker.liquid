@@ -1,0 +1,18 @@
+<div class="micro-modal micromodal-slide" id="biomarker-modal" aria-hidden="true">
+    <div class="micro-modal__overlay" tabindex="-1" data-micromodal-close>
+      <div class="micro-modal__container" role="dialog" aria-modal="true" aria-labelledby="biomarker-modal-title">
+        <header class="micro-modal__header">
+          <h2 class="micro-modal__title" id="biomarker-modal-title">
+            {{ settings.biomarker_modal_header }}
+          </h2>
+          <button class="micro-modal__close" aria-label="Close modal" data-micromodal-close></button>
+        </header>
+        <main class="micro-modal__content" id="biomarker-modal-content">
+          {{ settings.biomarker_modal_content }}
+        </main>
+        <footer class="micro-modal__footer">
+          <button class="button button--primary" data-micromodal-close>{{ settings.biomarker_modal_close_text }}</button>
+        </footer>
+      </div>
+    </div>
+  </div>

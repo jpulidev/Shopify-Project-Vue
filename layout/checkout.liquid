@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}" dir="{{ direction }}" class="{{ checkout_html_classes }}">
+  <head>
+     <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=GTM-W7LSMV6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'GTM-W7LSMV6');
+</script>
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-W7LSMV6');</script>
+    <!-- End Google Tag Manager -->
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, height=device-height, minimum-scale=1.0, user-scalable=0">
+    <meta name="referrer" content="origin">
+
+    <title>{{ page_title }}</title>
+
+    {{ content_for_header }}
+
+    {{ checkout_stylesheets }}
+    {{ checkout_scripts }}
+
+    {{ 'tap-checkout.min.css' | asset_url | stylesheet_tag }}
+  </head>
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+      <noscript><iframe
+      src="https://www.googletagmanager.com/ns.html?id=GTM-W7LSMV6" height="0"
+      width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+
+    {{ skip_to_content_link }}
+
+    <header class="banner" data-header role="banner">
+      <div class="wrap">
+        {{ content_for_logo }}
+      </div>
+    </header>
+
+    {{ order_summary_toggle }}
+    <div class="content" data-content>
+      <div class="wrap">
+        <div class="main">
+          <header class="main__header" role="banner">
+            {{ content_for_logo }}
+            {{ breadcrumb }}
+            {{ alternative_payment_methods }}
+          </header>
+          <main class="main__content" role="main">
+            {{ content_for_layout }}
+          </main>
+          <footer class="main__footer" role="contentinfo">
+            {{ content_for_footer }}
+          </footer>
+        </div>
+        <aside class="sidebar" role="complementary">
+          <div class="sidebar__header">
+            {{ content_for_logo }}
+          </div>
+          <div class="sidebar__content">
+            {{ content_for_order_summary }}
+
+            {% if settings.show_customer_support_checkout == true %}
+              {% render 'customer-support-info' %} 
+            {% endif %}
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    {{ tracking_code }}
+<!-- start Mixpanel -->
+<script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
+  for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f)}})(document,window.mixpanel||[]);
+  mixpanel.init('bcde5c30a60ef7f5e261b09426370d7e');</script><!-- end Mixpanel -->
+
+  <script>
+  // Retrieve Mixpanel ID
+  mixpanel.identify('{{ attributes.mixpanel_id }}');
+  
+  mixpanel.people.set({
+    "$name": "{{ customer.first_name }} {{ customer.last_name }}",
+    "$email": "{{ customer.email }}",
+    "last_updated": new Date()
+  });
+  
+  mixpanel.people.track_charge("{{order.total_price | money_without_currency}}".replace(",",""));
+  
+  mixpanel.track("Checkout",
+  {
+     orderId: '{{checkout.order_id}}',
+     customerName:'{% if customer %} {{ customer.first_name }}{% endif %}',
+     orderDiscountCode: '{% for discount_application in checkout.discount_applications %} {{ discount_application.title }}{% endfor %}',     // Discount code used on order, or discount group name. Used to identify commissionable orders.
+     orderDiscount: '{{discount_discount}}',
+     orderShipping: '{{order.total_price | money_without_currency}}',
+     orderSubtotal: '{{order.total_price | money_without_currency}}',     // Order subtotal. After discount is applied, before tax & shipping. Commission calculated from this.
+     orderTax: '{{order.total_price | money_without_currency}}',
+     orderCurrency: 'USD',
+     orderTotal: '{{order.total_price | money_without_currency}}' });
+  </script>
+<!-- End Mixpanel --> 
+
+    {% render 'checkout-scripts' %}
+        <!-- Start of HubSpot Embed Code -->
+<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/419889.js"></script>
+
+<script>
+    var hsUniqueKey = window.localStorage.getItem('hs_unique_user_id');
+    if (!hsUniqueKey) {
+        hsUniqueKey = Math.floor(Math.random() * 10000000);
+        window.localStorage.setItem('hs_unique_user_id', hsUniqueKey);
+    }
+  
+  
+    var identifyObject = {
+        id: hsUniqueKey
+    };
+  
+    var userEmail = "{{ checkout.email }}";
+    if (userEmail.length) {
+      identifyObject.email = userEmail;
+    }
+                
+                
+    var _hsq = window._hsq = window._hsq || [];
+    _hsq.push(["identify", identifyObject]);
+</script>
+<!-- End of HubSpot Embed Code -->
+    
+    <script type="text/javascript">
+usi_installed = 0; USI_installCode = function() { if (usi_installed == 0) { usi_installed = 1; var USI_headID = document.getElementsByTagName("head")[0]; var USI_installID = document.createElement('script'); USI_installID.type = 'text/javascript'; USI_installID.src = 'https://www.upsellit.com/active/insidetracker.jsp'; USI_headID.appendChild(USI_installID); } }; if (typeof(document.readyState) != "undefined" && document.readyState === "complete") { USI_installCode(); } else if (window.addEventListener){ window.addEventListener('load', USI_installCode, true); } else if (window.attachEvent) { window.attachEvent('onload', USI_installCode); } else { USI_installCode(); } setTimeout("USI_installCode()", 10000);
+</script>
+
+  </body>
+</html>

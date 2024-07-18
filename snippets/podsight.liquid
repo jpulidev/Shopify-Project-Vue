@@ -1,0 +1,75 @@
+<!-- INT-302 ⁃ Development: Marketing snippet: Podsights Pixel in post checkout thank you page -->
+
+<script>
+  (function (w, d) {
+    var id = 'pdst-capture',
+      n = 'script';
+    if (!d.getElementById(id)) {
+      w.pdst = w.pdst || function () {
+        (w.pdst.q = w.pdst.q || []).push(arguments);
+      };
+      var e = d.createElement(n);
+      e.id = id;
+      e.async = 1;
+      e.src = 'https://cdn.pdst.fm/ping.min.js';
+      var s = d.getElementsByTagName(n)[0];
+      s.parentNode.insertBefore(e, s);
+    }
+    w.pdst('conf', {
+      key: '55da7b388c2c41e6a68c9f95fe4b2a1e'
+    });
+  })(window, document);
+
+  {
+    %
+    assign line_item_quantities = order.line_items | map: 'quantity' %
+  } {
+    %
+    assign discount_code = '' %
+  } {
+    %
+    for discount in order.discounts %
+  } {
+    %
+    assign discount_code = discount.code %
+  } {
+    %
+    endfor %
+  }
+
+  pdst("view");
+  pdst("purchase", {
+    value: {
+      {
+        order.total_price
+      }
+    }
+    /100,
+    quantity: ([{
+      %
+      for quantity in line_item_quantities %
+    } {
+      {
+        quantity
+      }
+    }, {
+      %
+      endfor %
+    }]).reduce(function (a, b) {
+      return a + b
+    }),
+    currency: "USD",
+    order_id: "{{checkout.order_id}}",
+    discount_code: "{{discount_code}}",
+  });
+</script>
+<script>
+  if (typeof (pdst) != 'undefined') pdst("purchase", {
+    value: '300.5', // total sum of order
+    currency: "USD",
+    discount_code: "FQ123", // discount code used
+    order_id: "12312412" // order id
+  });
+</script>
+
+<!-- INT-302 ⁃ Development: Marketing snippet: Podsights Pixel in post checkout thank you page-->

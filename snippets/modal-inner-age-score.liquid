@@ -1,0 +1,25 @@
+<div class="micro-modal micromodal-slide" id="inner-age-addon" aria-hidden="true">
+    <div class="micro-modal__overlay" tabindex="-1" data-micromodal-close>
+      <div class="micro-modal__container" role="dialog" aria-modal="true" aria-labelledby="quantity-modal-title">
+        <header class="micro-modal__header">
+          <h2 class="micro-modal__title" id="quantity-modal-title">
+            {{ settings.inner_age_modal_title }}
+          </h2>
+          <button class="micro-modal__close inner-mobile-close" aria-label="Close modal" data-micromodal-close></button>
+        </header>
+        <main class="micro-modal__content" id="quantity-modal-content">
+          <div data-innerage-addon-content data-innerage-addon-product="default" class="innerage-addon-product" style="display: none;">
+            {{ settings.inner_age_modal_description }}
+          </div>
+          {% for i in shop.metafields.globals.innerage_addon_product %}
+            <div data-innerage-addon-content data-innerage-addon-product="{{shop.metafields.globals.innerage_addon_product[forloop.index0]}}" class="innerage-addon-product" style="display: none;">
+              {{ shop.metafields.globals.innerage_addon_modal_copy[forloop.index0] }}
+            </div>
+          {% endfor %}
+        </main>
+        <footer class="micro-modal__footer">
+          <button class="button button--primary" data-micromodal-close="">Got it, thanks!</button>
+        </footer>
+      </div>
+    </div>
+  </div>

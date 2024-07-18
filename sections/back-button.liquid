@@ -1,0 +1,31 @@
+<div class="page-width">
+    <div class="back-to-store">
+        <a href="{% if section.settings.back_button_link %}{{ section.settings.back_button_link }}{% else %}/{% endif %}" class="text-link">{% render 'icon-chevron-left' %} {{ section.settings.back_button_text }}</a>
+     </div>
+</div>
+
+ {% schema %}
+ {
+    "name": "Back To Store Button",
+    "class": "back-button",
+    "settings": [
+    {
+        "type": "header",
+        "content": {
+          "en": "Back to store"
+        }
+      },
+        {
+            "type": "text",
+            "id": "back_button_text",
+            "label": "Back text",
+            "default": "Store"
+        },
+        {
+            "type": "url",
+            "id": "back_button_link",
+            "label": "Back link"
+        }
+    ]
+}
+ {% endschema %}

@@ -1,0 +1,90 @@
+.page--banner .banner {
+  padding: 1rem 0;
+  background-position: bottom center;
+  border-bottom: 1px solid #e1e4e6;
+
+  .logo__image--small {
+    max-height: 1.625rem;
+  }
+}
+
+.main {
+  outline: 2px solid white;
+}
+
+.section__title {
+  font-weight: 600;
+  font-size: 1.5rem;
+}
+.product-thumbnail__quantity {
+  background-color: #00aaff;
+}
+.sidebar .icon-svg--color-adaptive-light {
+  color: #64c800;
+}
+
+.main .field__icon .icon-svg--color-adaptive-lighter,
+.main .field__caret .icon-svg--color-adaptive-lighter {
+  color: #00aaff;
+}
+
+.field--error .field__input {
+  background-color: #fbf3f2;
+  -webkit-box-shadow: 0 0 0 1px transparent;
+  box-shadow: 0 0 0 1px transparent;
+}
+
+.step__footer__continue-btn.btn {
+  padding: 10px 2.5rem;
+  font-size: 1rem;
+}
+
+.step__footer__previous-link {
+  font-size: 1rem;
+  svg {
+    display: none;
+  }
+}
+.logged-in-customer-information__avatar:before {
+  border-radius: 50%;
+}
+div.consent-wrapper {
+  border-radius: 5px;
+  padding: 10px;
+}
+div.checkbox-wrapper.consent {
+  display: flex;
+  margin-top: 10px;
+}
+.checkbox-wrapper.consent .checkbox_label {
+  margin-left: 10px;
+}
+.checkbox-wrapper.consent .checkbox_label a {
+  text-decoration: underline;
+}
+.checkbox_label.hidden {
+  display: none;
+}
+.btn.disabled {
+  background-color: #c8c8c8;
+}
+.sidebar__content {
+  height: calc(100vh - 7em);
+}
+.order-summary__sections {
+  height: unset;
+}
+a[href^="tel"] {
+  color: inherit;
+}
+.step__footer {
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  .dna-consent {
+    width: 100%;
+    order: -1;
+    margin-bottom: 20px;
+  }
+}

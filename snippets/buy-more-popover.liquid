@@ -1,0 +1,29 @@
+<div id="popover-{{ line_item_id }}-{{ line_item_index }}" class="popover__wrapper" role="tooltip">
+    <header class="popover__header">
+        <p class="popover__title" id="quantity-modal-title">
+          {{ settings.buy_more_save_modal_text }}
+        </p>
+      </header>
+    <main class="popover__content" id="quantity-modal-content">
+        <div class="popover__content-button">
+            <span class="popover__content-button--label">{{ settings.buy_more_save_button_label }}</span>
+            
+            {{ buy_more_two }}
+
+            <span class="popover__content-button--percent">
+              {% assign buy_more_percent_1 = buy_more_percent | replace: "{X}", '<span data-buy-more-modal-percent-1 ></span>%' %}
+             {{ buy_more_percent_1 }}
+            </span>
+        </div>
+        <div class="popover__content-button">
+          <span class="popover__content-button--label">{{ settings.buy_more_save_button_label }}</span>
+
+          {{ buy_more_four }}
+
+          <span class="popover__content-button--percent">
+            {% assign buy_more_percent_2 = buy_more_percent | replace: "{X}", '<span data-buy-more-modal-percent-2 ></span>%' %}
+             {{ buy_more_percent_2 }}
+          </span>
+        </div>
+      </main>
+</div>

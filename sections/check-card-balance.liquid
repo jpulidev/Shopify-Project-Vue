@@ -1,0 +1,69 @@
+<h1>{{ section.settings.title }}</h1>
+{{ section.settings.subtitle }}
+
+{%- assign app_type = 'check-gift-card' -%}
+<div id="vue-check-gift-cart-app-root" class="vue-check-gift-card-app" data-app-type="{{ app_type }}" data-app-id="{{ section.id }}">
+  <script id="{{ section.id }}-{{ app_type }}">
+    window
+      .theme
+      .vue
+      .availableApps
+      .push({
+        type: "{{ app_type }}",
+        id: "{{ section.id }}",
+        data: {
+          "settings": {{ section.settings | json }},
+          "blocks": [{% for block in section.blocks %}{{ block.settings | json }},{% endfor %}]
+        }
+      });
+  </script>
+</div> 
+
+<script>let settingsData = {{ section.settings | json }}</script>
+
+{% comment %} <script src="https://www.google.com/recaptcha/api.js"></script> {% endcomment %}
+
+{% schema %}
+  {
+    "name": "Check Gift Card Balance",
+    "class": "check-gift-card text-center",
+    "settings": [
+      {
+          "id": "title",
+          "type": "text",
+          "label": "Title",
+          "default": "Check your gift card balance"
+      },
+      {
+          "id": "subtitle",
+          "type": "richtext",
+          "label": "Subtitle text",
+          "default": "<p>Enter the gift card code to check your balance. Your gift card code was sent to you via email immediately after purchase.</p>"
+      },
+      {
+          "id": "input_label",
+          "type": "text",
+          "label": "Input Label Text",
+          "default": "Gift card code"
+      },
+      {
+          "id": "error_text",
+          "type": "richtext",
+          "label": "Error Text",
+          "default": "<p>The code you are trying to use is invalid. Please try again or contact us for help.</p>"
+      },
+      {
+          "id": "button_label",
+          "type": "text",
+          "label": "Button Label Text",
+          "default": "Check balance"
+      },
+      {
+          "id": "recaptcha_site_key",
+          "type": "text",
+          "label": "Recaptcha Site Key",
+          "default": "6LdelIkUAAAAAPXZT6dWInI4WBLs80eojVQTKSqX"
+      }
+    ]
+  }
+{% endschema %}

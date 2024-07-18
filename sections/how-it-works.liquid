@@ -1,0 +1,51 @@
+{% unless section.settings.hide %}
+    {% if product.metafields.how_it_works.icon[0] %}
+    <div class="how-it-works__inner">
+        <div class="page-width">
+            <h2 class="title">{{ section.settings.title }}</h2>
+            <div class="how-it-works__items-wrapper">
+                <!-- Loop through meta fields for steps -->
+                {% for i in product.metafields.how_it_works.icon %}
+                    <div class="how-it-works__item">
+                        <div class="how-it-works__item-img">
+                            <img src="{{ product.metafields.how_it_works.icon[forloop.index0].first.src }}" height="90" alt="{{ product.metafields.how_it_works.title[forloop.index0 ] }}" />
+                        </div>
+                        
+                       <div class="how-it-works__item-container">
+                            <div class="how-it-works__item-step">
+                                Step {{forloop.index}}
+                            </div>
+                            <div class="how-it-works__item-name">
+                                {{ product.metafields.how_it_works.title[forloop.index0 ]}}
+                            </div>
+                            <div class="how-it-works__item-desc">
+                                {{ product.metafields.how_it_works.description[forloop.index0 ]}}
+                            </div>
+                       </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+{% endunless %}
+{% schema %}
+    {
+        "name": "How It Works",
+        "class": "how-it-works",
+        "settings": [
+            {
+                "id": "title",
+                "type": "text",
+                "label": "Title",
+                "default": "How it works"
+            },
+            {
+                "id": "hide",
+                "type": "checkbox",
+                "label": "Hide How It Works",
+                "default": false
+            }
+        ]
+    }
+{% endschema %}

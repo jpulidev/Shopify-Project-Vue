@@ -1,0 +1,32 @@
+<div class="micro-modal micromodal-slide" id="innerage-warning-modal" aria-hidden="true">
+    <div class="micro-modal__overlay" tabindex="-1" data-micromodal-close>
+      <div class="micro-modal__container" role="dialog" aria-modal="true" aria-labelledby="innerage-warning-modal-title">
+        <header class="micro-modal__header">
+            {% render 'icon-warning' %}
+          <h2 class="micro-modal__title" id="innerage-warning-modal-title">
+          {{ settings.inner_age_warning_headline }}
+          </h2>
+          <button class="micro-modal__close" aria-label="Close modal" data-micromodal-close></button>
+        </header>
+        <main class="micro-modal__content" id="innerage-warning-modal-content">
+          {{ settings.inner_age_warning_body }}
+          {% unless customer %}{{ settings.inner_age_warning_login }}{% endunless %}
+        </main>
+        <footer class="micro-modal__footer">
+            <button aria-label="Close modal" data-micromodal-close class="button button--primary button--primary-inverse">
+                {{ settings.inner_age_warning_back }}
+                </button>
+            <a href="/" class="button button--primary">
+            {{ settings.inner_age_warning_shop }}
+            </a>
+            {% unless customer %}
+                <a href="{% if settings.login_url != blank %}{{ settings.login_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="button button--primary">
+                  {% if settings.login_text != blank %}{{ settings.login_text}}{% else %}{{ 'layout.customer.log_in' | t }}{% endif %}
+                </a>
+            {% endunless %}
+        </footer>
+      </div>
+    </div>
+  </div>
+  
+  

@@ -1,0 +1,361 @@
+.site-footer {
+  background: $color-brand-dark-gray;
+  margin-top: 55px;
+  padding: 45px 0 55px 0;
+
+  @include media-query($medium-down) {
+    text-align: center;
+  }
+
+  h4,
+  .h4 {
+    margin-bottom: 5.5px;
+  }
+
+  p,
+  &__rte a {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+
+  &__linklist-item a {
+    font-size: calc(
+    ((var(--font-size-base) - 2) / (var(--font-size-base))) * 1em;
+  }
+
+  &__content {
+    display: flex;
+    width: 100%;
+    align-items: flex-start;
+    flex-wrap: wrap;
+
+    .heading {
+
+      @include media-query($medium-down) {
+        display: none;
+      }
+    }
+
+    &.-mobile {
+      display: none;
+      
+      @include media-query($medium-down) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        p {
+          margin-bottom: 10px;
+          line-height: 24px;
+          font-size: 16px;
+        }
+
+        .-postscript p {
+          margin: 1em 0;
+          font-size: 12px;
+        }
+
+        .-app {
+          margin-top: 1em;
+          display: flex;
+          width: 300px;
+          max-width: 100%;
+          justify-content: space-between;
+
+          a {
+            width: 135px;
+            height: 45px;
+
+            &.app-store {
+              width: 135px;
+            }
+            
+            &.google-play {
+              width: 150px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &__item {
+    display: flex;
+    width: 100%;
+    flex: 1 1 100%;
+    margin-bottom: 55px;
+
+    &.-no-flex {
+      display: block;
+    }
+
+    &:first-of-type {
+      padding-left: 0;
+
+      @include media-query($medium-down) {
+        display: none;
+      }
+    }
+
+    &:last-of-type {
+      padding-right: 0;
+    }
+    
+
+    &-inner--newsletter {
+      width: 100%;
+    }
+
+    &-inner--text {
+      p {
+        line-height: 1.5;
+      }
+      + .site-footer__item-inner--text {
+        margin-top: 2em;
+      }
+
+      .-postscript {
+        margin-top: 15px;
+      }
+
+      @include media-query($medium-down) {
+        display: none;
+      }
+    }
+
+    &-inner--social {
+      @include media-query($medium-down) {
+        margin-top: 2em;
+      }
+    }
+
+    .-postscript {
+      p {
+        font-size: 12px;
+      }
+    }
+
+  }
+
+  @include media-query($medium-down) {
+    &__item {
+      &--one-quarter {
+        text-align: center;
+      }
+    }
+  }
+
+  @include media-query($medium-up) {
+    padding-bottom: 35px;
+
+    h4,
+    .h4 {
+      min-height: calc(var(--font-size-header) * 0.5);
+      margin-bottom: 10px;
+    }
+
+    &__content {
+      flex-wrap: nowrap;
+    }
+
+    &__item {
+      padding: 0 15px 0 15px;
+      margin-bottom: 45px;
+
+      &--full-width {
+        flex: 1 1 100%;
+      }
+
+      &--one-half {
+        flex: 1 1 50%;
+      }
+
+      &--one-third {
+        flex: 1 1 33%;
+      }
+
+      &--one-quarter {
+        flex: 1 1 40%;
+      }
+
+      &--three-quarters {
+        flex: 1 1 60%;
+
+        .-one-third {
+          padding-right: 5.75rem;
+        }
+      }
+
+      &--one-fifth {
+        flex: 1 1 20%;
+      }
+
+      &--center {
+        justify-content: center;
+      }
+
+      &--center > * {
+        text-align: center;
+      }
+    }
+
+    &-newsletter__one-half {
+      flex: 1 1 50%;
+    }
+  }
+
+  @include media-query($max-width-up) {
+    &__item {
+
+      &--three-quarters {
+        flex: 1 1 75%;
+
+        .-one-third {
+          padding-right: 5.75rem;
+        }
+      }
+
+      &--one-quarter {
+        flex: 1 1 25%;
+      }
+    }
+  }
+
+  @include media-query($medium-down) {
+    &__content {
+      padding: 0 18px;
+    }
+
+    &__item:last-of-type {
+      padding: 0;
+      margin-bottom: 0;
+    }
+  }
+}
+
+
+
+.site-footer__item-inner--newsletter .newsletter__submit {
+  margin-top: 5px;
+}
+.site-footer__item-inner--newsletter .newsletter__input {
+  margin: 5px 0 0 0;
+  width: 100%;
+}
+@media only screen and (min-width: 750px) {
+  .site-footer__item--full-width .site-footer__item-inner--newsletter {
+    max-width: 50%;
+  }
+}
+
+@media only screen and (min-width: 750px) {
+  .site-footer__centered--single-block {
+    width: 75%;
+    margin: 0 auto;
+  }
+}
+
+.site-footer__hr {
+  border-bottom: 1px solid $color-brand-light-gray;
+  margin: 55px 0 30px 0;
+  display: none;
+
+  @include media-query($large-up) {
+    margin: 10px 0 20px 0;
+    display: block;
+  }
+}
+@media only screen and (max-width: 749px) {
+  .site-footer__linklist.list--inline > li {
+    display: block;
+  }
+}
+
+.site-footer__linklist-item {
+  display: block;
+  padding: 15px 0;
+}
+@media only screen and (min-width: 750px) {
+  .site-footer__linklist-item {
+    padding: 0 30px 3px 0;
+  }
+}
+.site-footer__linklist-item:last-of-type {
+  padding-right: 0;
+}
+
+.site-footer__icon-list {
+  padding-bottom: 30px;
+}
+@media only screen and (min-width: 750px) {
+  .site-footer__icon-list {
+    padding-bottom: 15px;
+  }
+}
+
+@media only screen and (min-width: 750px) {
+  .site-footer__social-icons {
+    margin-top: 15px;
+  }
+}
+
+.social-icons__item {
+  padding: 0 5px;
+
+  &:first-of-type {
+    padding-left: 0;
+  }
+}
+@media only screen and (min-width: 750px) {
+  .social-icons__item:last-of-type {
+    padding-right: 0;
+  }
+}
+
+.social-icons__link {
+  display: block;
+}
+
+.site-footer__subwrapper {
+  margin-top: 35px;
+}
+
+@media only screen and (min-width: 750px) {
+  .site-footer-item-align-right {
+    text-align: right;
+  }
+}
+
+.site-footer__copyright-content {
+  color: #87919b;
+  font-size: calc(
+    ((var(--font-size-base) - 3) / (var(--font-size-base))) * 1em
+  );
+
+  a {
+    color: #87919b;
+  }
+}
+
+.site-footer__payment-icons .payment-icon {
+  margin-bottom: 5px;
+  margin-left: 5px;
+}
+.site-footer__payment-icons .payment-icon:first-child {
+  margin-left: 0;
+}
+
+.site-footer-item-center-vertically {
+  padding-top: 7.5px;
+}
+
+@media only screen and (min-width: 750px) {
+  .site-footer-item-tall {
+    margin-bottom: 15px;
+    height: 46px;
+  }
+  .site-footer-item-tall .site-footer__icon-list {
+    padding-bottom: 0;
+  }
+}

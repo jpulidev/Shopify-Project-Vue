@@ -1,0 +1,55 @@
+html {
+  // font-size: 62.5%;
+}
+
+body {
+  font-family: $font-stack-body;
+  font-weight: $font-body-weight;
+  font-style: $font-body-style;
+  // font-size: 1.6rem;
+  font-size: 16px;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $font-heading;
+}
+
+body,
+input,
+textarea,
+button,
+select {
+  -webkit-font-smoothing: antialiased;
+  text-size-adjust: 100%;
+}
+
+a:focus {
+  color: inherit;
+}
+a {
+  transition: all 0.3s ease;
+}
+
+h1,
+.h1 {
+  font-family: $font-heading;
+  font-weight: var(--font-weight--semi-bold);
+}
+
+h2,
+.h2 {
+  font-family: $font-heading;
+  font-size: 2.5rem;
+  font-weight: var(--font-weight--semi-bold);
+  text-transform: none;
+  letter-spacing: inherit;
+
+  @media only screen and (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+}

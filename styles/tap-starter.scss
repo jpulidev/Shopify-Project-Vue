@@ -1,0 +1,41 @@
+@charset 'UTF-8';
+
+/**
+* Shopify Starter Theme SCSS -- The Taproom
+*
+ * eg: @import "./starter/core/forms";
+ */
+
+// Settings
+@import "./starter/variables";
+
+// Tools
+@import "./starter/tools/mixins";
+@import "./starter/tools/functions";
+
+// Core
+@import "./starter/core/forms";
+@import "./starter/core/helpers";
+@import "./starter/core/layout";
+@import "./starter/core/media";
+@import "./starter/core/responsive-tables";
+@import "./starter/core/rte";
+@import "./starter/core/typography";
+
+// Components
+@import "./starter/components/buttons";
+@import "./starter/components/hero-banner";
+@import "./starter/components/icons";
+@import "./starter/components/placeholders";
+@import "./starter/components/responsive-images";
+@import "./starter/components/address-forms";
+
+// Sections
+@import "./starter/sections/blog-posts";
+@import "./starter/sections/collection-list";
+@import "./starter/sections/featured-collection";
+@import "./starter/sections/image-with-text";
+
+// Templates
+@import "./starter/templates/gift_card";
+@import "./starter/templates/product";

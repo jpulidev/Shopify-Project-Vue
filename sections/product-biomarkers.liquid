@@ -1,0 +1,94 @@
+{% unless section.settings.hide %}
+
+{% assign hidden_biomarker_categories = 0 %}
+{% for hidden in product.metafields.biomarkers.hide_biomarker_category %}
+    {% if hidden == 'true' %}
+        {% assign hidden_biomarker_categories = hidden_biomarker_categories | plus: 1 %}
+    {% endif %}
+{% endfor %}
+
+{% assign biomarker_categories = product.metafields.biomarkers.title.size %}
+
+    {% if product.metafields.biomarkers.title[0] %}
+        {% assign visible_biomarkers = biomarker_categories | minus: hidden_biomarker_categories %}
+        {% if visible_biomarkers > 5 %}
+            {% assign column_count = "three-cols" %}
+        {% else %}
+            {% assign column_count = "two-cols" %}
+        {% endif%}
+        <div class="product-biomarkers__inner">
+            <div class="page-width">
+                <h2 class="title">{{section.settings.title}} {{ product.title}}</h2>
+                {% if product.metafields.biomarkers.biomarkers_description %}
+                <div class="product-biomarkers__description">
+                    {{ product.metafields.biomarkers.biomarkers_description }}
+                    <button class="text-link modal-link" data-custom-open="biomarker-modal">What is a biomarker?</button>
+                </div>
+                {% endif %}
+                <div class="product-biomarkers__columns-container">
+                    <div class="product-biomarkers__item-wrapper {{ column_count }}">
+                        {% for i in product.metafields.biomarkers.title %}
+                            {% if product.metafields.biomarkers.hide_biomarker_category[forloop.index0] == "true" %}
+                                {% continue %}
+                            {% endif %}
+                            <div class="product-biomarkers__item">
+                                <div class="product-biomarkers__item-title">
+                                    {{ product.metafields.biomarkers.title[forloop.index0] }}
+                                </div>
+                                <div class="product-biomarkers__item-list">
+                                    {% if product.metafields.biomarkers.minimum_markers[forloop.index0] != blank %}
+                                        {% capture min_biomarker_list %}{{ product.metafields.biomarkers.minimum_markers[forloop.index0] }}{% endcapture %}
+                                        {% assign min_markers = min_biomarker_list | split: "|" %}
+                                        <div class="min-markers" data-min-markers-block >
+                                            <div class="min-markers__tag">
+                                                Minimum Biomarkers
+                                            </div>
+                                            <ul>
+                                                {% for marker in min_markers %}
+                                                    <li>{{ marker }}</li>
+                                                {% endfor %}
+                                            </ul>
+                                        </div>
+                                    {% endif %}
+
+                                    {% capture biomarker_list %}{{ product.metafields.biomarkers.markers[forloop.index0] }}{% endcapture %}
+                                    {% assign markers = biomarker_list | split: "|" %}
+                                    <ul>
+                                        {% for marker in markers %}
+                                            {% if min_markers contains marker %}
+                                            <li data-min-marker >{{ marker }}</li>
+                                            {% else %}
+                                            <li>{{ marker }}</li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+{% endunless %}
+{% schema %}
+    {
+        "name": "Product Biomarkers",
+        "class": "product-biomarkers",
+        "settings": [
+            {
+                "id": "title",
+                "type": "text",
+                "label": "title",
+                "default": "Biomarkers included with"
+            },
+            {
+                "id": "hide",
+                "type": "checkbox",
+                "label": "Hide this section on all pages",
+                "default": false
+            }
+        ]
+    }
+{% endschema %}

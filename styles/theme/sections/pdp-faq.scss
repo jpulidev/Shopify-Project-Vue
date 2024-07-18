@@ -1,0 +1,106 @@
+.product-faqs {
+  margin-top: 30px;
+  border-top: 1px solid #e1e4e6;
+  @include media-query($small) {
+    padding-top: 20px;
+    margin-bottom: 40px;
+  }
+  &__headline {
+    margin-top: 10px;
+    margin-bottom: 5px;
+    text-align: center;
+  }
+  &__description {
+    text-align: center;
+    font-size: 1.25rem;
+    margin-top: 30px;
+    p {
+      font-weight: 600;
+    }
+    p,
+    a {
+      font-size: inherit;
+    }
+    a {
+      color: $color-brand;
+      font-weight: normal;
+    }
+    @include media-query($small) {
+      margin-top: 10px;
+      text-align: left;
+      font-size: 1rem;
+      a {
+        display: block;
+      }
+    }
+  }
+  &__inner {
+    margin: 60px 0;
+    @include media-query($small) {
+      margin: 20px 0;
+    }
+  }
+  &__item-wrapper {
+    color: $color-brand-dark-gray;
+    font-size: 1rem;
+    &:not(:last-of-type) {
+      border-bottom: 1px solid #e1e4e6;
+    }
+
+    & + .product-faqs__headline {
+      margin-top: 2rem;
+    }
+
+    & + .product-faqs__item-wrapper {
+      margin-top: 8px;
+    }
+  }
+  &__item-question {
+    display: grid;
+    grid-template-columns: 1fr 20px;
+    grid-template-rows: 1fr;
+    width: 100%;
+    padding: 1rem 5px 1rem 0;
+    border: 0;
+    background-color: white;
+    appearance: none;
+    font-weight: 600;
+
+    // Expanded
+    &[aria-expanded="true"] {
+      .product-faqs__item-question--icon {
+        svg {
+          transform: rotate(180deg);
+        }
+      }
+    }
+    &--icon {
+      text-align: center;
+      svg {
+        transform: rotate(0deg);
+        transition: all 0.5s ease;
+        fill: $color-brand;
+        width: 13px;
+        path {
+          fill: $color-brand;
+        }
+      }
+    }
+    &--copy {
+      text-align: left;
+      margin-bottom: 0;
+      margin-left: 0;
+    }
+  }
+
+  &__item-answer {
+    margin: 0 0 1rem;
+    display: none;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    a {
+      color: $color-brand;
+      text-decoration: underline;
+    }
+  }
+}

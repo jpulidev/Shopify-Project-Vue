@@ -1,0 +1,192 @@
+{%- assign app_type = 'subscription' -%}
+<div id="vue-app-root" class="vue-subscription-app" data-app-type="{{ app_type }}" data-app-id="{{ section.id }}">
+  <script id="{{ section.id }}-{{ app_type }}">
+
+  let fullProductData = []
+  {% for product in collections.home-all-products.products %}
+    fullProductData.push({
+      product: {{ product | json }}, 
+      biomarkers: {{ product.metafields.biomarkers | json }},
+      productIcons : {{product.metafields.about_icons.icon | json }}
+    })
+  {% endfor %}
+
+    window
+      .theme
+      .vue
+      .availableApps
+      .push({
+        type: "{{ app_type }}",
+        id: "{{ section.id }}",
+        data: {
+          "settings": {{ section.settings | json }},
+          "blocks": [{% for block in section.blocks %}{{ block.settings | json }},{% endfor %}],
+          "allProducts": [{% for product in collections.home-all-products.products %}{{ product | json }},{% endfor %}],
+          "allBiomarkers": [{% for product in collections.home-all-products.products %}{{ product.metafields.biomarkers | json }},{% endfor %}],
+          "allProductsIcons": [{% for product in collections.home-all-products.products %}{{ product.metafields.about_icons.icon | json }},{% endfor %}],
+          "productsWithBiomarkers": fullProductData,
+          "addToCartText": '{{ settings.add_to_cart_button }}',
+          "selectOptionsText": '{{ settings.select_options_button }}',
+          "viewDetailsText": '{{ settings.view_details_link }}',
+          "showReviews": {{ settings.show_product_reviews }},
+          "buyMoreMessage": '{{ settings.buy_more_save_pdp_detail }}',
+        } 
+      });
+  </script>
+</div> 
+
+{% comment %} <script>
+
+let settingsData = {{ section.settings | json }}
+
+</script> {% endcomment %}
+
+{% style %}
+  {% if section.settings.gift_card_image %}
+  .gift-card-cta-container{
+    background-image: url({{ section.settings.gift_card_image | img_url: 'x300' }});
+    background-position:center;
+    background-size: cover;
+  }
+  {% endif %}
+  
+  .fade-enter{
+    opacity: 0;
+  }
+  .fade-enter-active{
+    transition: all .3s ease;
+  }
+  .fade-enter-to{
+    opacity: 1;
+    transition: all .3s ease;
+  }
+  .fade-leave{
+    opacity: 1;
+  }
+  .fade-leave-active{
+    transition: all .3s ease;
+  }
+  .fade-leave-to{
+    transition: all .3s ease;
+    opacity: 0;
+  }
+
+  .slide-enter{
+    transform: translate(-100%,0);
+  }
+  .slide-enter-active{
+    transition: all .3s ease;
+  }
+  .slide-enter-to{
+    transform: translate(0,0);
+    transition: all .3s ease;
+  }
+  .slide-leave{
+    opacity: 1;
+  }
+  .slide-leave-active{
+    transition: all .3s ease;
+  }
+  .slide-leave-to{
+    transition: all .3s ease;
+    transform: translate(-100%,0);
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Home Shop All",
+  "class": "home-shop-all",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "goalFilters",
+      "label": "Filter by goal",
+      "default": "All, Overall Health, High Performance, Healthy Aging, Immunity",
+      "info": "Comma-separated list, must match product tags."
+    },
+    {
+      "type": "text",
+      "id": "defaultFilter",
+      "label": "Default selected filter",
+      "default": "Best sellers",
+      "info": "This must match a filter entered in 'Filter by goals'."
+    },
+    {
+      "type": "image_picker",
+      "id": "gift_card_image",
+      "label": "Background Image for Gift Card CTA"
+    },
+    {
+      "type": "text",
+      "id": "gift_card_cta_text_main",
+      "label": "Gift Card CTA Main Text",
+      "default": "Gift the Gift of Health"
+    },
+    {
+      "type": "text",
+      "id": "gift_card_cta_subheading",
+      "label": "Gift Card CTA Sub Text",
+      "default": "Ultra-personalized guidance"
+    },
+    {
+      "type": "text",
+      "id": "gift_card_cta_button_text",
+      "label": "Gift Card CTA Button Text",
+      "default": "Shop gift card"
+    },
+    {
+      "type": "url",
+      "id": "gift_card_cta_url",
+      "label": "Gift Card CTA URL Link"
+    },
+    {
+      "type": "text",
+      "id": "compare_plans_cta_text",
+      "label": "Compare Plans CTA Text",
+      "default": "Which blood biomarkers are in each plan?"
+    },
+    {
+      "type": "text",
+      "id": "compare_plans_cta_button_text",
+      "label": "Compare Plans CTA Button Text",
+      "default": "Compare plans"
+    },
+    {
+      "type": "url",
+      "id": "compare_plans_cta_url",
+      "label": "Compare Plans CTA URL Link"
+    }
+  ],
+  "blocks": [
+    
+  ],
+"presets": [
+      {
+        "name": "Home - Shop All App",
+        "category": "Home"
+      }
+    ]
+}
+
+{% endschema %}
+
+    {% comment %} {
+      "type": "text",
+      "id": "goal-filters",
+      "label": "Filter by goal. Comma-separated list, must match product tags",
+      "default": "All, Overall Health, High Performance, Healthy Aging, Immunity",
+    },
+    {
+      "type": "text",
+      "id": "other-filters",
+      "label": "Other filters. Comma-separated list, must match product tags",
+      "default": "Available worldwide, Best sellers, Bundles, At-home kits",
+    }, {% endcomment %}
+
+    {% comment %} {
+      "type": "textarea",
+      "id": "otherFilters",
+      "label": "Other filters. Comma-separated list, must match product tags",
+      "default": "Available worldwide, Best sellers, Bundles, At-home kits"
+    }, {% endcomment %}

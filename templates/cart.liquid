@@ -1,0 +1,42 @@
+{% comment %}
+  The contents of the cart.liquid template can be found in /sections/cart-template.liquid
+{% endcomment %}
+
+{% section 'cart-template' %}
+
+<select id="all_countries" hidden>
+  {{ country_option_tags }}
+</select>
+
+
+{% if shop.metafields.globals.cart_faq_question %}
+<div class="page-width below-cart-content">
+  <div class="cart-bottom">
+    <div class="cart-bottom__inner">
+      {% section 'cart-faq' %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<script>
+  document.addEventListener("DOMContentLoaded", function(event) {
+    let gtag = window[window['GoogleAnalyticsObject'] || 'gtag'];
+    let counter = 0;
+
+    let gtagIsLoaded = function () {
+      if (typeof gtag == 'function') {
+        gtag("send", {
+          hitType: "event",
+          eventCategory: "Cart",
+          eventAction: "visit",
+          eventLabel: "{{ request.path }}",
+        });
+      } else if (counter < 5) {
+        counter+=1;
+        setTimeout(gtagIsLoaded, 500);
+      }
+    }
+  });
+</script>
+

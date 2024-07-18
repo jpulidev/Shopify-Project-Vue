@@ -1,0 +1,725 @@
+<script>
+  mixpanel.track("Order Completed",
+    {
+       orderId: '{{checkout.order_id}}',
+       orderDiscountCode: '{{discount_code}}',     // Discount code used on order, or discount group name. Used to identify commissionable orders.
+       orderDiscount: '{{discount_discount}}',
+       orderShipping: '{{ shipping_price | money }}',
+       orderSubtotal: '{{order.total_price | money_without_currency}}',     // Order subtotal. After discount is applied, before tax & shipping. Commission calculated from this.
+       orderTax: '{{ tax_price | money }}',
+       orderCurrency: 'USD',
+       orderTotal: '{{order.total_price | money_without_currency}}'}); 
+  </script>
+  
+<script type="application/javascript">
+
+  {% assign dnaProductPresent = false %}
+  {% for line_item in checkout.line_items %}
+    {% if line_item.title contains 'DNA' %}
+      {% assign dnaProductPresent = true %}
+      {% break %}
+    {% endif %}
+  {% endfor %}
+
+  let dnaProductPresent = {{ dnaProductPresent }};
+
+  const CheckoutScripts = () => {
+    const selectors = {
+      emailSection: "section section--contact-information",
+      submitButton: "continue_button",
+      giftCardPopup: 'gift-popup',
+      modalOverlay: "modal-overlay",
+      okButton: "ok-button",
+      returnButton: "return-button",
+      sidebar: "sidebar",
+      body: 'body',
+      total: "total-line-table__footer",
+      stepSections: 'step__sections',
+      firstStep: '[data-customer-information-form="true"]',
+      discount_amount: '[data-checkout-discount-amount-target]',
+      discount_wrapper: '.total-line--reduction'
+    }
+
+    const hideCustomDiscount = () => {
+      if (document.querySelector(selectors.discount_amount).innerText == "$0.00") {
+        document.querySelector(selectors.discount_amount).closest(selectors.discount_wrapper).classList.add("visually-hidden")
+      } else {
+        document.querySelector(selectors.discount_amount).closest(selectors.discount_wrapper).classList.remove("visually-hidden")
+      }
+    }
+
+    const checkForDNAConsentNeeded = () => {
+      const stepSection = document.getElementsByClassName(selectors.stepSections);
+      let dnaConsent = createDNAConsentCheckboxMarkup();
+      const stepFooter = document.getElementsByClassName("step__footer");
+      stepSection[0].appendChild(dnaConsent);
+        // if there is a DNA product in cart, show the DNA consent
+        if(dnaProductPresent){
+          document.querySelector(".consent-wrapper.dna-consent.hidden").classList.remove("hidden");
+        } else {
+          localStorage.removeItem("dnaConsentStatus");
+        }
+
+        // check for 
+        if( localStorage.getItem("dnaConsentStatus") ){
+          document.getElementById('dna-consent-checkbox').checked = true
+        } else {
+          document.getElementById('dna-consent-checkbox').checked = false
+        }
+
+        checkContinueStatus();
+    }
+
+    const checkForConsentNeeded  = () => {
+      const stepSection = document.getElementsByClassName(selectors.stepSections);
+      const firstStep = document.getElementsByTagName('form')[0].dataset.customerInformationForm;
+      let checkbox = createCheckboxMarkup();
+        stepSection[0].appendChild(checkbox);
+        if(localStorage.getItem("consentStatus") ){
+          document.getElementById('consent-checkbox').checked = true
+        } else {
+          document.getElementById('consent-checkbox').checked = false
+        }
+
+      checkContinueStatus();
+    }
+
+    const checkContinueStatus = () => {
+      if( 
+        (localStorage.getItem("consentStatus") && !dnaProductPresent) 
+        || 
+        ( localStorage.getItem("consentStatus") && localStorage.getItem("dnaConsentStatus"))  
+        ) {
+        enableSubmitButton();
+      } else {
+        disableSubmitButton();
+      }
+    }
+
+    const disableSubmitButton = () => {
+      let button = document.getElementById(selectors.submitButton);
+      
+      if (button) {
+        button.setAttribute('disabled', true);
+        button.classList.add('disabled');
+      }
+    }
+
+    const enableSubmitButton = () => {
+      let button = document.getElementById(selectors.submitButton);
+      if(button) {
+       button.removeAttribute('disabled');
+       button.classList.remove('disabled');     
+      }
+    }
+    const createDNAConsentCheckboxMarkup = () => {
+      const dnaConsentWrapper = document.createElement('div');
+      const dnaConsentCheckboxWrapper = document.createElement('div');
+      const dnaConsentHeadline = document.createElement('h3');
+      const dnaCheckboxDiv = document.createElement('div');
+      const dnaCheckbox = document.createElement('input');
+      const dnaConsentLabel = document.createElement('label');
+      const dnaConsentLabelText = `{{ settings.dna_consent_label}}`;
+
+      dnaConsentCheckboxWrapper.classList.add('checkbox-wrapper');
+      dnaConsentCheckboxWrapper.classList.add('consent');
+
+      dnaCheckbox.setAttribute('id', 'dna-consent-checkbox');
+      dnaCheckbox.setAttribute('name', "checkout[attributes][dnaConsent]");
+      dnaCheckbox.setAttribute('type', "checkbox");
+      dnaCheckbox.setAttribute('value', "true");
+      dnaCheckbox.classList.add('input-checkbox');
+
+      dnaConsentLabel.htmlFor = 'dna-consent-checkbox';
+      dnaConsentLabel.classList.add('checkbox_label');
+      dnaConsentLabel.innerHTML = dnaConsentLabelText.replace(/<\/?p[^>]*>/g, "");
+
+      dnaCheckboxDiv.appendChild(dnaCheckbox);
+      dnaCheckboxDiv.appendChild(dnaConsentLabel);
+
+      dnaConsentCheckboxWrapper.appendChild(dnaCheckboxDiv);
+
+      dnaConsentWrapper.classList.add('consent-wrapper')
+      dnaConsentWrapper.classList.add('dna-consent')
+      dnaConsentWrapper.classList.add('hidden')
+      dnaConsentWrapper.appendChild(dnaConsentHeadline);
+      dnaConsentWrapper.appendChild(dnaConsentCheckboxWrapper);
+
+      return dnaConsentWrapper;
+    }
+
+    const createCheckboxMarkup = () => {
+      const consentWrapper = document.createElement('div');
+      const consentCheckboxWrapper = document.createElement('div');
+      const consentHeadline = document.createElement('h3');
+      const checkboxDiv = document.createElement('div');
+      const checkbox = document.createElement('input');
+      const consentLabel = document.createElement('label');
+      const termsOfService = document.createElement('a');
+      const privacyPolicy = document.createElement('a');
+      const productConsent = document.createElement('a');
+      const termsText = document.createTextNode('{{ settings.consent-terms-link-text }}');
+      const privacyText = document.createTextNode('{{ settings.consent-privacy-link-text }}');
+      const productConsentText = document.createTextNode('{{ settings.consent-product-link-text }}');
+      const labelText = document.createTextNode(`{{ settings.consent-pre-link}}`);
+
+      termsOfService.href = '{{ settings.consent-terms-link }}';
+      termsOfService.appendChild(termsText);
+
+      privacyPolicy.href = '{{ settings.consent-privacy-link }}'
+      privacyPolicy.appendChild(privacyText)
+
+      productConsent.href = '{{ settings.consent-product-link }}'
+      productConsent.appendChild(productConsentText);
+
+      consentCheckboxWrapper.classList.add('checkbox-wrapper');
+      consentCheckboxWrapper.classList.add('consent');
+
+      checkbox.setAttribute('id', 'consent-checkbox');
+      checkbox.setAttribute('name', "consentRequired");
+      checkbox.setAttribute('type', "checkbox");
+      checkbox.setAttribute('value', "0");
+      checkbox.classList.add('input-checkbox');
+
+      consentLabel.htmlFor = 'consent-checkbox';
+      consentLabel.classList.add('checkbox_label');
+      consentLabel.appendChild(labelText);
+      consentLabel.appendChild(termsOfService);
+      consentLabel.appendChild(document.createTextNode(', '));
+      consentLabel.appendChild(privacyPolicy);
+      consentLabel.appendChild(document.createTextNode(', '));
+      consentLabel.appendChild(productConsent);
+      consentLabel.appendChild(document.createTextNode('.'));
+
+      checkboxDiv.appendChild(checkbox);
+      checkboxDiv.appendChild(consentLabel);
+
+      consentCheckboxWrapper.appendChild(checkboxDiv);
+
+      consentWrapper.classList.add('consent-wrapper')
+      consentWrapper.appendChild(consentHeadline);
+      consentWrapper.appendChild(consentCheckboxWrapper);
+
+      return consentWrapper;
+    }
+
+    const createFooterLinks = () => {
+
+      const termsOfServiceFooterItem = document.createElement('li');
+      const privacyPolicyFooterItem = document.createElement('li');
+      const dnaResearchFooterItem = document.createElement('li');
+      const productConsentFooterItem = document.createElement('li');
+
+      const termsOfServiceFooter = document.createElement('a');
+      const privacyPolicyFooter = document.createElement('a');
+      const dnaResearchFooter = document.createElement('a');
+      const productConsentFooter = document.createElement('a');
+
+      const termsTextFooter = document.createTextNode('{{ settings.footer-terms-link-text }}');
+      const privacyTextFooter = document.createTextNode('{{ settings.footer-privacy-link-text }}');
+      const dnaResearchTextFooter = document.createTextNode('{{ settings.footer-dna-research-link-text }}');
+      const productConsentTextFooter = document.createTextNode('{{ settings.footer-consent-product-link-text }}');
+
+      termsOfServiceFooter.href = '{{ settings.footer-terms-link }}';
+      termsOfServiceFooter.appendChild(termsTextFooter);
+      termsOfServiceFooterItem.appendChild(termsOfServiceFooter);
+      termsOfServiceFooterItem.classList.add("policy-list__item")
+
+      privacyPolicyFooter.href = '{{ settings.footer-privacy-link }}';
+      privacyPolicyFooter.appendChild(privacyTextFooter);
+      privacyPolicyFooterItem.appendChild(privacyPolicyFooter);
+      privacyPolicyFooterItem.classList.add("policy-list__item")
+
+      dnaResearchFooter.href = '{{ settings.footer-dna-research-link }}';
+      dnaResearchFooter.appendChild(dnaResearchTextFooter);
+      dnaResearchFooterItem.appendChild(dnaResearchFooter);
+      dnaResearchFooterItem.classList.add("policy-list__item");
+
+      productConsentFooter.href = '{{ settings.footer-consent-product-link }}';
+      productConsentFooter.appendChild(productConsentTextFooter);
+      productConsentFooterItem.appendChild(productConsentFooter);
+      productConsentFooterItem.classList.add("policy-list__item");
+
+      if("{{ settings.footer-terms-link-text }}" != "" && "{{ settings.footer-terms-link }}" != "" ){
+        document.querySelector(".main__footer ul.policy-list").appendChild(termsOfServiceFooterItem);
+      }
+      if("{{ settings.footer-privacy-link-text }}" != "" && "{{ settings.footer-privacy-link }}" != "" ){
+        document.querySelector(".main__footer ul.policy-list").appendChild(privacyPolicyFooterItem);
+      }
+      if("{{ settings.footer-dna-research-link-text }}" != "" && "{{ settings.footer-dna-research-link }}" != "" ){
+        document.querySelector(".main__footer ul.policy-list").appendChild(dnaResearchFooterItem);
+      }
+      if("{{ settings.footer-consent-product-link-text }}" != "" && "{{ settings.footer-consent-product-link }}" != "" ){
+        document.querySelector(".main__footer ul.policy-list").appendChild(productConsentFooterItem);
+      }
+
+    }
+
+    const onConsentChange = () => {
+      let checkbox = document.getElementById('consent-checkbox');
+      let dnaCheckbox = document.getElementById('dna-consent-checkbox');
+
+      if (checkbox) {
+        checkbox.addEventListener('change', function(event) {
+          let isChecked = event.target.checked;
+          if (isChecked) {
+            localStorage.setItem("consentStatus", true)
+          } else if (isChecked === false) {
+            localStorage.removeItem("consentStatus")
+          }
+
+          checkContinueStatus();
+        });
+      }
+
+      if (dnaCheckbox) {
+        dnaCheckbox.addEventListener('change', function(event) {
+          let isChecked = event.target.checked;
+          if (isChecked) {
+            localStorage.setItem("dnaConsentStatus", true)
+            dnaCheckbox.setAttribute('value', 'true')
+          } else if (isChecked === false) {
+            localStorage.removeItem("dnaConsentStatus")
+            dnaCheckbox.setAttribute('value', 'false')
+          }
+
+          checkContinueStatus();
+        });
+      }
+    }
+
+    const buildOrderStatusPage = () => {
+      // get the person's name, create a new div at top of page, and insert the things there
+      const content = document.querySelector(".content");
+      const pageWidth = document.createElement("div");
+        pageWidth.classList.add("page-width");
+        pageWidth.setAttribute(
+          "style",
+          "display: flex; max-width: 1200px; padding: 2em; margin: 0 auto; justify-content: space-around;"
+      );
+      const heroEl = document.createElement("section");
+
+      heroEl.classList.add("hero");
+
+      const name = document.querySelector(".step__sections > .section");
+      const messaging = document.createElement("p");
+      var t = document.createTextNode(
+        "You've taken the next step in your health and wellness journey and we’re here to help you reach your goals. Let’s get started and setup your account."
+      );
+
+      messaging.setAttribute("style", "margin: 20px 0;");
+      messaging.appendChild(t);
+
+      // create the button
+      var btn = document.createElement("a");
+      btn.innerHTML = "Setup my account";
+
+      btn.setAttribute(
+        "style",
+        "display: inline-block;vertical-align: middle; width: auto; border: 0; text-align: center; white-space: nowrap; text-decoration: none; user-select: none; appearance: none; padding: 11px 20px 13px; border-radius: 3px; font-weight: 600; background: #00AAFF; color: #ffffff; transition: all 0.2s ease-out; border: 2px solid #00AAFF; margin-bottom: 3em;"
+      );
+
+      btn.setAttribute(
+        "href",
+        `https://www.insidetracker.com/customer/store/purchased-on-shopify?purchaserId=${Shopify.checkout.customer_id}`
+      );
+
+      heroEl.appendChild(name);
+      heroEl.appendChild(messaging);
+      heroEl.appendChild(btn);
+      pageWidth.appendChild(heroEl);
+
+      // create the image
+      var myImage = new Image();
+      myImage.src =
+        "https://cdn.shopify.com/s/files/1/0529/3185/4511/files/confirmation.svg?v=1630619752";
+      myImage.classList.add("hero-image");
+      pageWidth.appendChild(myImage);
+
+      content.prepend(pageWidth);
+
+      // do some styling things for the bottom of the page
+      document
+        .querySelector(".content .wrap")
+        .setAttribute(
+          "style",
+          "width: 100%; max-width: none; background-color: #f8f8f8; padding: 0 3em; box-sizing: border-box;"
+        );
+      document
+        .querySelector(".content .wrap .main")
+        .setAttribute("style", "outline: 0;");
+
+      // do this in a set timeout so the info has time to load before we hack the styles
+      setTimeout(function() {
+        const contentBoxes = document.querySelectorAll(
+          ".section__content .content-box"
+        );
+        for (var i = 0; i < contentBoxes.length; i++) {
+          contentBoxes[i].setAttribute("style", "border-color: transparent;");
+        }
+
+        const orderSummary = document.querySelector(".order-summary");
+
+        orderSummary.setAttribute(
+          "style",
+          "background: #ffffff; border-radius: 5px; padding: 1.7em;"
+        );
+
+        const name = document.querySelector(".main .step__sections > .section");
+        name.setAttribute("style", "padding-top: 0;");
+
+        const sidebar = document.querySelector(".sidebar");
+        sidebar.setAttribute("style", "padding-top: 4em;");
+      }, 1000);
+
+      // do the styling that is media query dependent
+      var css =
+          ".hero {flex: 0 0 40%;} .hero-image {flex: 0 0 40%} @media only screen and (max-width: 768px) {.page-width {flex-wrap: wrap} .hero {flex: 1 1 100%;} .hero-image {display: none;}}",
+        head = document.head || document.getElementsByTagName("head")[0],
+        style = document.createElement("style");
+
+      head.appendChild(style);
+
+      style.type = "text/css";
+      if (style.styleSheet) {
+        // This is required for IE8 and below.
+        style.styleSheet.cssText = css;
+      } else {
+        style.appendChild(document.createTextNode(css));
+      }
+    }
+
+    return {
+      checkForDNAConsentNeeded: checkForDNAConsentNeeded,
+      checkForConsentNeeded: checkForConsentNeeded,
+      onConsentChange: onConsentChange,
+      checkContinueStatus: checkContinueStatus,
+      buildOrderStatusPage: buildOrderStatusPage,
+      createFooterLinks: createFooterLinks,
+      hideCustomDiscount: hideCustomDiscount
+    };
+  }
+
+  if(!Shopify.Checkout.OrderStatus) {
+    document.addEventListener("DOMContentLoaded", function(event) {
+      Shopify = window.Shopify || {};
+      Shopify.checkoutScripts = CheckoutScripts();
+      let checkout = Shopify.checkoutScripts;
+      let gtag = window[window['GoogleAnalyticsObject'] || 'gtag'];
+      checkout.checkForConsentNeeded();
+      checkout.checkForDNAConsentNeeded();
+      checkout.onConsentChange();
+      checkout.checkContinueStatus();
+      checkout.createFooterLinks();
+      checkout.hideCustomDiscount();
+      let counter = 0;
+
+      let gtagIsLoaded = function () {
+        if (typeof gtag == 'function') {
+          gtag("send", {
+            hitType: "event",
+            eventCategory: "Checkout",
+            eventAction: "visit",
+            eventLabel: "Reached Checkout",
+          });
+        } else if (counter < 5) {
+          counter+=1;
+          setTimeout(gtagIsLoaded, 500);
+        }
+      }
+
+      const observedEl = document.querySelector(".main__content");
+      const observer = new MutationObserver(mutationRecords => {
+        if(!document.querySelector(".consent-wrapper")){
+          checkout.checkForConsentNeeded();
+          checkout.checkForDNAConsentNeeded();
+          checkout.onConsentChange();
+        }
+        checkout.checkContinueStatus();
+        checkout.hideCustomDiscount();
+      })
+
+      observer.observe(observedEl, {subtree: true, childList: true});
+    });
+  } else if (Shopify.Checkout.OrderStatus) {
+    document.addEventListener("DOMContentLoaded", function(event) {
+      Shopify.checkoutScripts = CheckoutScripts();
+      let checkout = Shopify.checkoutScripts;
+      checkout.buildOrderStatusPage();
+
+      let counter = 0;
+
+      let gtagIsLoaded = function () {
+        if (typeof gtag == 'function') {
+          gtag("send", {
+            hitType: "event",
+            eventCategory: "Checkout",
+            eventAction: "Purchase",
+            eventLabel: "Purchase complete",
+          });
+        } else if (counter < 5) {
+          counter+=1;
+          setTimeout(gtagIsLoaded, 500);
+        }
+      }
+    });
+  }
+</script>
+
+
+<script>
+  ! function (f, b, e, v, n, t, s) {
+    if (f.fbq) return;
+    n = f.fbq = function () {
+      n.callMethod ?
+        n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+    };
+    if (!f._fbq) f._fbq = n;
+    n.push = n;
+    n.loaded = !0;
+    n.version = '2.0';
+    n.queue = [];
+    t = b.createElement(e);
+    t.async = !0;
+    t.src = v;
+    s = b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t, s)
+  }(window, document, 'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '655562707875470');
+  fbq('track', 'PageView');
+</script>
+<noscript>
+  <img height="1" width="1" alt="Insidetracker facebook pixel"
+    src="https://www.facebook.com/tr?id=655562707875470&ev=PageView&noscript=1" />
+</noscript>
+<script>
+  // Purchase event will trigger on checkout 'Thank you' step.
+  if (Shopify.Checkout.step === "thank_you") {
+    if (typeof (fbq) != 'undefined') fbq('track', 'Purchase', {
+      value: '', // TOTAL SUM of order
+      currency: 'USD'
+    });
+  }
+</script>
+
+<!-- DO NOT MODIFY -->
+
+
+<script type="text/javascript">
+  (function (a, b, c, d, e, f, g) {
+    e['ire_o'] = c;
+    e[c] = e[c] || function () {
+      (e[c].a = e[c].a || []).push(arguments)
+    };
+    f = d.createElement(b);
+    g = d.getElementsByTagName(b)[0];
+    f.async = 1;
+    f.src = a;
+    g.parentNode.insertBefore(f, g);
+  })('https://utt.impactcdn.com/A2981441-76b5-4267-8657-a6b7cd54559f1.js', 'script', 'ire', document, window);
+</script>
+
+<script type="text/javascript">
+  {% assign line_item_quantities = order.line_items | map: 'quantity' %} 
+  {% assign discount_code = '' %} 
+  {% for discount in order.discounts %} 
+  {% assign discount_code = discount.code %} 
+  {% endfor %}
+
+  ire('trackConversion', {
+    A2981441 - 76 b5 - 4267 - 8657 - a6b7cd54559f1
+  }, {
+    orderId: "{{checkout.order_id}}",
+    customerId: "{{customer.id}}",
+    customerEmail: "{{ customer.email }}",
+    customerStatus: "New",
+    currencyCode: "USD",
+    orderPromoCode: "{{ discount_application.title }}",
+    orderDiscount: "{{discount_code}}",
+    items: []
+  }, {
+    verifySiteDefinitionMatch: true
+  });
+</script>
+
+
+<script>
+  (function (w, d) {
+    var id = 'pdst-capture',
+      n = 'script';
+    if (!d.getElementById(id)) {
+      w.pdst = w.pdst || function () {
+        (w.pdst.q = w.pdst.q || []).push(arguments);
+      };
+      var e = d.createElement(n);
+      e.id = id;
+      e.async = 1;
+      e.src = 'https://cdn.pdst.fm/ping.min.js';
+      var s = d.getElementsByTagName(n)[0];
+      s.parentNode.insertBefore(e, s);
+    }
+    w.pdst('conf', {
+      key: '55da7b388c2c41e6a68c9f95fe4b2a1e'
+    });
+  })(window, document);
+
+  {% assign line_item_quantities = order.line_items | map: 'quantity' %} 
+  {% assign discount_code = '' %} 
+  {% for discount in order.discounts %} 
+  {% assign discount_code = discount.code %} 
+  {% endfor %}
+
+  pdst("view");
+  pdst("purchase", {
+    value: {{ checkout.total_price }} /100,
+    quantity: ([
+    {% for quantity in line_item_quantities %} 
+    {{quantity }}, 
+    {% endfor %}
+    ]).reduce(function (a, b) {
+      return a + b
+    }),
+    currency: "USD",
+    order_id: "{{checkout.order_id}}",
+    discount_code: "{{discount_code}}",
+  });
+</script>
+<script>
+  if (typeof (pdst) != 'undefined') pdst("purchase", {
+    value: '300.5', // total sum of order
+    currency: "USD",
+    discount_code: "FQ123", // discount code used
+    order_id: "12312412" // order id
+  });
+</script>
+
+<script>
+
+  var _exp = window._exp || [];
+
+  {% assign line_item_quantities = order.line_items | map: 'quantity' %} 
+  {% assign discount_code = '' %} 
+  {% for discount in order.discounts %} 
+      {% assign discount_code = discount.code %} 
+  {% endfor %}
+  {% for discount_application in checkout.cart_level_discount_applications %}
+      {% assign discount_discount = discount_application.total_allocated_amount | money %}  
+  {% endfor %}
+  
+  _exp.push({
+     pixelId: 'exp-507-534013', //Pixel ID provided by EV
+     orderId: '{{checkout.order_id}}',
+     orderDiscountCode: '{{discount_code}}',     // Discount code used on order, or discount group name. Used to identify commissionable orders.
+     orderDiscount: '{{discount_discount}}',
+     orderShipping: '{{ shipping_price | money }}',
+     orderSubtotal: '{{ subtotal_price | money }}',     // Order subtotal. After discount is applied, before tax & shipping. Commission calculated from this.
+     orderTax: '{{ tax_price | money }}',
+     orderCurrency: 'USD',
+     orderTotal: '{{ shipping_price | money }}',
+     products: [
+         // Your engineers will have to loop through all products purchased
+         // and add these lines - one per product.
+         {% for line in subtotal_line_items %}
+             {% if line.product.title %}	
+         {id: '{{line.product.id}}', // parent SKU - Should match product code in EV store file 
+         name: '{{line.product.name}}',
+         sku: '{{line.product.variant.sku}}', 
+         upc: '__UPC__', 
+         msrp: '__MSRP__',
+         price: '{{ line.final_line_price | money }}', 
+         quantity: '{{ line.quantity }}'},
+           {% endif %}
+         {%endfor%}
+          // end products loop here
+     ],
+   });
+  
+  
+  // **********     Invoking Pixel - Do not edit below this line.   **********
+  
+   (function(w, d) {
+     function ls() {
+       var e = d.createElement('script');
+       e.src = 'https://plugins.experticity.com/oa/2/plugin.js';
+       d.body.appendChild(e);
+     }
+     if (w.attachEvent) {
+       w.attachEvent('onload', ls);
+     } else {
+       w.addEventListener('load', ls, false);
+     }
+   })(window, document);
+  
+  </script>
+
+<!-- Begin ShareASale Tracking -->
+{%if first_time_accessed %}
+<script>
+const sasMid = '94578', sasStoreId = '', sasXtype = '', sasSkulist = [], sasPricelist = [], sasQuantitylist = [],
+    sasOrderName = '{{ order.name | handleize }}' || sasGetOrderRef(),
+    sasDiscounts = Shopify.checkout.discount ? parseFloat(Shopify.checkout.discount.amount) : 0,
+    sasCurrency = Shopify.checkout.presentment_currency || '{{ order.currency }}',
+    sasAmount = parseFloat(Shopify.checkout.subtotal_price),
+    sasDiscountPercent = 1 - (sasDiscounts / (sasAmount + sasDiscounts)),
+    sasNewCustomer = {% if customer.orders_count > 1 %}'0'{% elsif customer.orders_count <= 1 %} '1'{% else %} ''{% endif %},
+    sasCouponcode = Shopify.checkout.discount ? Shopify.checkout.discount.code : '',
+    sasVersion = 'shopify_4.0',
+    sasImg = new Image(),
+    sasMetaTagOpen = document.createElement('meta'),
+    sasMetaTagClose = document.createElement('meta');
+sasMetaTagOpen.setAttribute('name', 'referrer'); sasMetaTagOpen.setAttribute('content', 'unsafe-url');
+sasMetaTagClose.setAttribute('name', 'referrer'); sasMetaTagClose.setAttribute('content', 'origin');
+Shopify.checkout.line_items.map((x) => {
+    sasSkulist.push(x.sku);
+    sasPricelist.push((x.price * sasDiscountPercent).toFixed(2));
+    sasQuantitylist.push(x.quantity)
+});
+sasImg.src = `https://shareasale.com/sale.cfm?v=${sasVersion}&merchantID=${sasMid}&transtype=sale&amount=${sasAmount}&tracking=${sasOrderName}&skulist=${sasSkulist}&pricelist=${sasPricelist}&quantitylist=${sasQuantitylist}&currency=${sasCurrency}&couponcode=${sasCouponcode}&newcustomer=${sasNewCustomer}`;
+if (sasStoreId) { sasImg.src += `&storeid=${sasStoreId}` }
+if (sasXtype) { sasImg.src += `&xtype=${sasXtype}` }
+document.body.appendChild(sasMetaTagOpen);
+document.body.appendChild(sasImg);
+document.body.appendChild(sasMetaTagClose);
+function sasGetOrderRef() {
+    var orderRef;
+    try {
+        var orderLabel = document.querySelector('.os-order-number');
+        if (orderLabel !== null) {
+            orderRef = orderLabel.innerText.split('#')[1];
+            if (!orderRef) {
+                orderRef = orderLabel.innerText.split(' ')[1];
+            }
+        }
+        if (!orderRef) {
+            orderRef = window.Shopify.checkout.order_id;
+        }
+        if (!orderRef) {
+            throw Error('order_ref_error');
+        }
+    } catch (err) {
+        console.log('ShareASale: error getting orderRef from page. Using timestamp.');
+        orderRef = Date.now();
+    }
+    return orderRef;
+}
+</script>
+{% endif %}
+<script src="https://www.dwin1.com/19038.js"></script>
+
+
+<!--MNTN Conversion Pixel-->
+<!-- Install ONLY on conversion page/event-->
+<script type="text/javascript">
+(function(){var x=null,p,q,m,
+o="32784",
+l="{{ checkout.order_id }}",
+i="{{ checkout.total_price | money_without_currency }}",
+c="",
+k="",
+g="",
+j="",
+u="",
+shadditional="";
+try{p=top.document.referer!==""?encodeURIComponent(top.document.referrer.substring(0,512)):""}catch(n){p=document.referrer!==null? document.referrer.toString().substring(0,512):""}try{q=window&&window.top&&document.location&&window.top.location===document.location? document.location:window&&window.top&&window.top.location&&""!==window.top.location?window.top.location:document.location}catch(b) {q=document.location}try{m=parent.location.href!==""?encodeURIComponent(parent.location.href.toString().substring(0,512)):""}catch(z) {try{m=q!==null?encodeURIComponent(q.toString().substring(0,512)):""}catch(h){m=""}}var A,y=document.createElement("script"),w=null,v=document.getElementsByTagName("script"),t=Number(v.length)-1,r=document.getElementsByTagName("script") [t];if(typeof A==="undefined"){A=Math.floor(Math.random()*100000000000000000)}w="dx.mountain.com/spx? conv=1&shaid="+o+"&tdr="+p+"&plh="+m+"&cb="+A+"&shoid="+l+"&shoamt="+i+"&shocur="+c+"&shopid="+k+"&shoq="+g+"&shoup="+j+"&shpil="+u+shadditional;y.type="text/javascript";y.src= ("https:"===document.location.protocol?"https://":"http://")+w;r.parentNode.insertBefore(y,r)}());
+</script>

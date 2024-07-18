@@ -1,0 +1,98 @@
+.button {
+  display: inline-block;
+  vertical-align: middle;
+  width: auto;
+  border: 0;
+  text-align: center;
+  white-space: nowrap;
+  text-decoration: none;
+  user-select: none;
+  appearance: none;
+  padding: 11px 20px 13px;
+  border-radius: 3px;
+  font-weight: 600;
+
+  &--primary {
+    background: $color-brand;
+    color: $color-button-text;
+    transition: all 0.2s ease-out;
+    border: 2px solid $color-brand;
+
+    &:focus,
+    &:not([disabled]):hover {
+      background-color: $color-button-text;
+      color: $color-brand;
+      border-color: $color-brand;
+    }
+  }
+
+  &--primary-inverse {
+    background: #fff;
+    color: $color-brand;
+    transition: all 0.2s ease-out;
+    border: 2px solid $color-brand;
+
+    &:focus,
+    &:not([disabled]):hover {
+      background-color: $color-brand;
+      color: #fff;
+      border-color: $color-brand;
+    }
+  }
+
+  &--gray {
+    background: $color-brand-light-gray;
+    color: $color-button-text;
+    transition: all 0.2s ease-out;
+
+    &:focus,
+    &:not([disabled]):hover {
+      color: $color-button-text;
+      background-color: $color-brand-lightest-gray;
+    }
+  }
+
+  &--bright {
+    background: $color-accent;
+    color: $color-button-text;
+    transition: all 0.2s ease-out;
+
+    &:focus,
+    &:not([disabled]):hover {
+      color: $color-button-text;
+      background-color: $color-accent-hover;
+    }
+  }
+  &[disabled] {
+    opacity: 0.4;
+  }
+
+  &.--full {
+    width: 100%;
+  }
+
+  .add-to-cart-text,
+  [data-add-to-cart-text] {
+    pointer-events: none;
+  }
+}
+
+a,
+.text-link {
+  color: $color-brand;
+  font-size: inherit;
+  font-weight: normal;
+
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: $color-brand-dark-gray;
+  }
+
+  .icon {
+    width: 22px;
+    height: 22px;
+    position: relative;
+    top: -2px;
+  }
+}

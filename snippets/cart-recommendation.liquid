@@ -1,0 +1,104 @@
+{% assign skipDNAProduct = false %}
+{% for item in cart.items %}
+  {% if item.title contains "DNA" %}
+    {% assign skipDNAProduct = true %}
+  {% endif %}
+{% endfor %}
+
+<div id="recommendation-cart" class="cart-recommendation">
+    <h3 class="product-faqs__headline" style="text-align: center;margin-bottom: 4%;">{{ settings.upsell_section_headline }}</h3>
+    <ul class="list-cart-item">
+      {% assign upsell_count = 0 %}
+      {% for product in collections.cart-upsell.products %}
+        {% unless cart_products_list contains product.id %}
+        {% if product.title contains "DNA" and skipDNAProduct == true %}
+          {% continue %}
+        {% endif %}
+        {% assign upsell_count = upsell_count | plus: 1%}
+          <li id="product-upsell-{{product.id}}" class="upsell-cart">
+            <a href="{{ product.url }}">
+                <div class="product__img_upsell" style="background-image: url({{ product.featured_image | img_url: '1400x800' }});">       
+              </div>
+              <p class="product__title product-cart-upsell" style="font-weight: 700;">{{ product.title }}</p>
+              <p class="product-upsell-description">{{product.metafields.accentuate.markers_count}} </p>
+              <div class="price_and_plus"> 
+                <p class="product__price">
+                  {% if product.title contains 'InnerAge' %} 
+                    {{product.first_available_variant.price | money}}
+                  {% else %}
+                    {{ product.price | money}}
+                  {%endif%} 
+                </p>
+              </div>
+            </a>
+
+            {% if product.options.size > 1 %}
+              <div>
+                  <a href="#" class="upsell-modal select-option-upsell button button--primary" 
+                    data-handle="{{ product.handle }}" 
+                    data-title="{{product.title}}"
+                    data-price="{{product.first_available_variant.price | money}}"
+                    data-image="{{ product.featured_image | img_url: '1400x800' }}"
+                    data-skuvariant="{{ product.first_available_variant.sku }}"
+                  {% for variant in product.variants %}
+                    {% if variant.title contains "Mobile"%}
+                    data-mobile="{{variant.id}}" data-mobiletitle="{{variant.title}}" data-variantprice="{{variant.price | money}}"
+                    {% endif %}
+                    {% if variant.title contains "lab" %}
+                    data-lab="{{variant.id}}" data-labtitle="{{variant.title}}" 
+                    {% endif %}
+                    {% for tag in product.tags %}
+                      {% if tag == 'Most Popular' %}     
+                          data-tagtitle="show-most-popular" 
+                      {% endif %}     
+                    {% endfor %}
+                  {%endfor%} 
+                  data-custom-open="cart-upsell-{{ product.id }}"
+                  >{{ settings.select_options_button }}</a>
+              </div>
+            {% else %}      
+              <button class="add-to-cart-btn button button--primary" data-id="{{product.variants.first.id }}" data-selling-plan="{{ product.variant.first.selling_plan_allocation }}" data-upsell-add-to-cart>
+                <span class="add-to-cart-text">
+                  {{ settings.add_to_cart_button }}
+                </span>
+                <span class="hide" data-loader>
+                  {% render 'icon-spinner' %}
+                </span>
+              </button>
+            {% endif %} 
+
+            <div>
+              <a href="{{ product.url }}" class="viewdetails" >
+                {{ settings.view_details_link }}
+              </a>
+            </div>
+          </li>
+        {% endunless %}
+        {% if upsell_count == 2 %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+    </ul>
+</div>
+
+{% if template == 'cart' %}
+ <style>
+@media screen and (max-width:750px) {
+  .page-width {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+  .cart-header__inner, .cart-mobile-summary, .cart__row, .cart__footer, .cart-bottom__inner {
+    padding: 0px 17px;
+  }
+  .template-cart .cart-product--addon__inner{
+    margin: 3px;
+  }
+  .template-cart .cart-product--addon{
+    width: 91%;
+    margin: 0 auto;
+  } 
+}
+
+ </style>
+{% endif %}

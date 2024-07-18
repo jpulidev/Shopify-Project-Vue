@@ -1,0 +1,40 @@
+
+<div class="hp-cta-left-container">
+    <div class="gift-card-cta">
+    </div>
+    <div class="compare-cta">
+    </div>
+</div>
+
+{% schema %}
+    {
+        "name": "HP CTA Left",
+        "class": "hp-cta-left",
+        "settings": [
+            {
+                "id": "title",
+                "type": "text",
+                "label": "Title",
+                "default": "What's included in your"
+            },
+            {
+                "id": "desc",
+                "type": "richtext",
+                "label": "Description",
+                "default": "<p>Our scientists have studied genetic markers that can impact important areas of wellness.</p><p>Your personalized DNA report reveals your genetic potential in these areas.</p>"
+            },
+            {
+                "id": "hide",
+                "type": "checkbox",
+                "label": "Hide What's Included",
+                "default": false
+            },
+            {
+                "id": "disclaimer",
+                "type": "richtext",
+                "label": "Disclaimer Text",
+                "default": "<p>*Your DNA analysis will include, at minimum, the above reports. Sometimes, the genotyping process omits genetic data that results in fewer markers for InsideTracker to analyze. See our <a href='/faqs'>FAQs</a> for more detail.</p>"
+            }
+        ]
+    }
+{% endschema %}

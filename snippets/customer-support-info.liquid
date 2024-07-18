@@ -1,0 +1,41 @@
+<div class="text-center">
+    <div class="customer-support-cta">
+        {% if settings.customer_support_icon %}
+        <img src="{{ settings.customer_support_icon | img_url: '100x100' }}" />
+        {% endif %}
+      <h4 class="customer-support-cta__header">{{ settings.customer_support_info_headline }}</h4>
+      {{ settings.customer_support_info }}
+    </div>
+</div>
+
+<style>
+    .customer-support-cta{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+
+        margin-top:50px;
+        font-size: 16px;
+    }
+  .customer-support-cta .customer-support-cta__header {
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 18px;
+      margin-top: 10px;
+    }
+    .customer-support-cta  img{
+      max-width: 100%;
+      width:32px;
+    }
+    .customer-support-cta  p {
+      margin-bottom: 0;
+      font-family: 'Open Sans', sans-serif;
+    }
+    .customer-support-cta .text-center .customer-support-cta {
+      margin-top: 40px;
+      font-family: 'Open Sans', sans-serif;
+    }
+</style>

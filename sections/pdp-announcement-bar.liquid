@@ -1,0 +1,25 @@
+{% if section.settings.show == true %}
+    <div class="pdp-announcement-bar__inner">
+        {{ section.settings.title }}
+    </div>
+{% endif %}
+{% schema %}
+    {
+        "name": "PDP Announcement Bar",
+        "class": "pdp-announcement-bar",
+        "settings": [
+            {
+                "id": "title",
+                "type": "richtext",
+                "label": "Announcement text",
+                "default": "<p>Purchasing for someone else? <a href='' >Get a Gift Card</a></p>"
+            },
+            {
+                "id": "show",
+                "type": "checkbox",
+                "label": "Show announcement bar",
+                "default": true
+            }
+        ]
+    }
+{% endschema %}

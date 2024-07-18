@@ -1,0 +1,52 @@
+<div class="micro-modal micromodal-slide" id="mobile-blood-draw-modal" aria-hidden="true">
+    <div class="micro-modal__overlay" tabindex="-1" data-micromodal-close>
+      <div class="micro-modal__container" role="dialog" aria-modal="true" aria-labelledby="mobile-blood-draw-modal-title">
+        <header class="micro-modal__header">
+          <h2 class="micro-modal__title" id="mobile-blood-draw-modal-title">
+            {{ settings.mobile_blood_draw_modal_header }}
+          </h2>
+          <button class="micro-modal__close inner-mobile-close" aria-label="Close modal" data-micromodal-close></button>
+        </header>
+        <main class="micro-modal__content" id="mobile-blood-draw-modal-content">
+          {{ settings.mobile_blood_draw_modal_content }}
+
+          <div class="micro-modal__grid text-center flex-grid">
+            <div class="flex-grid__item -one-third">
+              {% if settings.mobile_blood_draw_modal_icon1 != blank %}
+                <div class="micro-modal__icon">
+                  <object data="{{ settings.mobile_blood_draw_modal_icon1 }}" type="image/svg+xml">
+                    <img loading="lazy" src="{{ settings.mobile_blood_draw_modal_icon1 }}" alt="{{ settings.mobile_blood_draw_modal_icon1_caption }}" />
+                  </object>
+                </div>
+              {% endif %}
+              <p>{{ settings.mobile_blood_draw_modal_icon1_caption }}</p>
+            </div>
+            <div class="flex-grid__item -one-third">
+              {% if settings.mobile_blood_draw_modal_icon2 != blank %}
+                <div class="micro-modal__icon">
+                  <object data="{{ settings.mobile_blood_draw_modal_icon2 }}" type="image/svg+xml">
+                    <img src="{{ settings.mobile_blood_draw_modal_icon2 }}" alt="{{ settings.mobile_blood_draw_modal_icon2_caption }}" />
+                  </object>
+                </div>
+              {% endif %}
+              <p>{{ settings.mobile_blood_draw_modal_icon2_caption }}</p>
+            </div>
+            <div class="flex-grid__item -one-third">
+              {% if settings.mobile_blood_draw_modal_icon3 != blank %}
+                <div class="micro-modal__icon">
+                  <object data="{{ settings.mobile_blood_draw_modal_icon3 }}" type="image/svg+xml">
+                    <img src="{{ settings.mobile_blood_draw_modal_icon3 }}" alt="{{ settings.mobile_blood_draw_modal_icon3_caption }}" />
+                  </object>
+                </div>
+              {% endif %}
+              <p>{{ settings.mobile_blood_draw_modal_icon3_caption }}</p>
+            </div>
+          </div>
+          <small>{{ settings.mobile_blood_draw_modal_postscript }}</small>
+        </main>
+        <footer class="micro-modal__footer">
+          <button class="button button--primary" data-micromodal-close>{{ settings.mobile_blood_draw_modal_close_text }}</button>
+        </footer>
+      </div>
+    </div>
+  </div>

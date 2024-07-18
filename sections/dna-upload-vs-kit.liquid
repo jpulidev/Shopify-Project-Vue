@@ -1,0 +1,39 @@
+{% assign compare_products = product.metafields.product_vs_product.title | split: "|" %}
+<div class="upload-vs-kit__inner">
+    <div class="page-width">
+        <h2 class="title">{{ all_products[compare_products[0]].title }} vs {{ all_products[compare_products[1]].title }}</h2>
+        <div class="upload-vs-kit__desc">{{ product.metafields.product_vs_product.main_description }}</div>
+
+        <div class="upload-vs-kit__items-wrapper">
+            {% for i in product.metafields.product_vs_product.icon %}
+                <div class="upload-vs-kit__item">
+                    <div class="upload-vs-kit__item-img">
+                        {% if product.metafields.product_vs_product.icon[forloop.index0] %}
+                            {% if product.metafields.product_vs_product.icon[forloop.index0].alt != blank %}
+                                {% assign alt_text = product.metafields.product_vs_product.icon[forloop.index0].alt %}
+                            {% else %}
+                                {% assign alt_text = product.metafields.product_vs_product.description[forloop.index0] | strip_html %}
+                            {% endif %}
+                            {{ product.metafields.product_vs_product.icon[forloop.index0].first.src | img_tag: alt_text }}
+                        {% else %}
+                            {{ 'image' | placeholder_svg_tag }}
+                        {% endif %}
+                    </div>
+                    
+                   <div class="upload-vs-kit__item-container">
+                        <div class="upload-vs-kit__item-desc">
+                            {{ product.metafields.product_vs_product.description[forloop.index0] }}
+                        </div>
+                   </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "Product vs Product",
+        "class": "upload-vs-kit",
+        "settings": []
+    }
+{% endschema %}

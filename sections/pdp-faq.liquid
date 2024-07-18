@@ -1,0 +1,60 @@
+<div class="product-faqs__inner">
+    <div class="page-width">
+        <div data-section-type="faq" data-section-id="{{ section.id}}">
+            {%- if section.settings.title != "" -%}
+                <h2 class="product-faqs__headline">{{ section.settings.title }}</h2>
+            {%- endif -%}
+        
+            <div class="product-faqs__inner">
+                <dl class="faqAccordion">
+                    {% for faq in product.metafields.faq.question %}    
+                    {% if product.metafields.faq.question[forloop.index0] and product.metafields.faq.answer[forloop.index0] %}
+                        <div class="product-faqs__item-wrapper" >
+                            <dt class="product-faqs__item">
+                                <button type="button" class="product-faqs__item-question" aria-expanded="false" aria-controls="#faq-answer-{{ forloop.index }}">
+                                    <span class="product-faqs__item-question--copy">
+                                        {{ product.metafields.faq.question[forloop.index0] }}
+                                    </span>
+                                    <span class="product-faqs__item-question--icon">
+                                        {% include 'icon-chevron-down' %}
+                                    </span>
+                                </button>
+                            </dt>
+                            <dd id="faq-answer-{{ forloop.index }}" class="product-faqs__item-answer" aria-hidden="true">
+                                {{ product.metafields.faq.answer[forloop.index0] }}
+                            </dd>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                </dl>
+            </div>
+
+            {% if section.settings.description != blank %}
+            <div class="product-faqs__description">
+                {{ section.settings.description }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "PDP FAQ",
+        "class": "product-faqs",
+        "settings": [
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Title",
+                "default": "Frequently Asked Questions"
+            },
+            {
+                "type": "richtext",
+                "id": "description",
+                "label": "Description",
+                "default": "<p>Can't find what you need? <a href='https://support.insidetracker.com/supportcenter' target='_blank'>Visit our support center</a></p>"
+            }
+
+        ]
+    }
+{% endschema %}

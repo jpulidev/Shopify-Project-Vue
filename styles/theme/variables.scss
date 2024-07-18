@@ -1,0 +1,88 @@
+// Text colors
+$color-text: var(--color-text);
+$color-body-text: var(--color-body-text);
+$color-sale-text: var(--color-sale-text);
+$color-sale-field-text: var(--color-text-field-text);
+$color-text-field-border: var(--color-text-field-border);
+$color-text-field: var(--color-text-field);
+
+// Background colors
+$color-body: var(--color-main-background);
+$color-navigation-active: #4b555f;
+$color-navigation-hover: #37414b;
+
+// Other colors
+$color-border: var(--color-borders);
+$color-image-overlay-text: var(--color-image-overlay-text);
+$color-image-overlay: var(--color-image-overlay);
+$color-body-bg: var(--color-body-bg);
+$color-button: var(--color-button);
+$color-button-text: var(--color-button-text);
+$color-small-button-text-border: var(--color-small-button-text-border);
+
+$color-black: #000000;
+$color-brand-off-white: #c3c8cd;
+$color-brand-superlight-gray: #f8f8f8;
+$color-brand-lightest-gray: #6e7882;
+$color-brand-gray: #87919b;
+$color-brand-light-gray: #4b555f;
+$color-brand-dark-gray: #232d37;
+$color-brand-light-gray: #6e7882;
+$color-brand-medium-gray: #37414b;
+$color-white: #ffffff;
+$color-accent: var(--brand-color-accent);
+$color-accent-hover: var(--brand-color-accent-hover);
+$color-brand: var(--brand-color-primary);
+$color-brand-opacity: var(--brand-color-primary-opacity);
+
+// Helper colors for form error states
+$color-disabled: #000000;
+$color-disabled-border: #000000;
+$color-error: #ff6d6d;
+$color-error-bg: #ffffff;
+$color-success: #000000;
+$color-success-bg: #000000;
+
+// Typography
+$font-heading: var(--font-heading);
+$font-body: var(--font-body);
+$font-body-weight: var(--font-body-weight);
+$font-body-style: var(--font-body-style);
+$font-body-bold-weight: var(--font-body-bold-weight);
+$font-body-semibold-weight: var(--font-weight--semi-bold);
+$font-stack-body: var(--font-stack-body);
+$font-size-base: var(--font-size-base);
+
+// Transitions
+$transition-duration: 250ms;
+$transition-timing: ease-in-out;
+
+// Grid
+$grid-medium: 46.85em;
+$grid-large: 61.85em;
+$grid-widescreen: 87.5em;
+$grid-max-width: 73.75em;
+$grid-gutter: 30px;
+
+// Breakpoints used with the media-query mixin
+$small: "small";
+$medium: "medium";
+$medium-down: "medium-down";
+$medium-up: "medium-up";
+$large: "large";
+$large-down: "large-down";
+$large-up: "large-up";
+$max-width-up: "max-width-up";
+$widescreen: "widescreen";
+
+$breakpoints: (
+  $small "(max-width: #{$grid-medium - 1})",
+  $medium "(min-width: #{$grid-medium}) and (max-width: #{$grid-large - 1})",
+  $medium-down "(max-width: #{$grid-large - 1})",
+  $medium-up "(min-width: #{$grid-medium})",
+  $large "(min-width: #{$grid-large}) and (max-width: #{$grid-widescreen - 1})",
+  $large-down "(max-width: #{$grid-widescreen - 1})",
+  $large-up "(min-width: #{$grid-large})",
+  $max-width-up "(min-width: #{$grid-max-width})",
+  $widescreen "(min-width: #{$grid-widescreen})"
+);

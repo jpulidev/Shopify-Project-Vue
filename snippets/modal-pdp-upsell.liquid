@@ -1,0 +1,340 @@
+
+  <div class="micro-modal micromodal-slide" id="pdp-upsell" aria-hidden="true">
+    <div class="micro-modal__overlay" tabindex="-1" data-micromodal-close style="z-index: 1001;">
+      <div class="micro-modal__container" role="dialog" aria-modal="true" aria-labelledby="mobile-blood-draw-modal-title">
+        <header class="micro-modal__header">
+          <h2 class="micro-modal__title" id="mobile-blood-draw-modal-title">
+            {%- assign productUpsell = product.metafields.accentuate.get_more_with | capitalize -%}
+            Select Plan Options
+          </h2>
+          <button class="micro-modal__close" aria-label="Close modal" data-micromodal-close></button>
+        </header>
+        
+        <main class="micro-modal__content" id="mobile-blood-draw-modal-content">
+        
+          <div class="product-template__container pdp-upsell">
+            <ul class="upsell-grid-pdp">
+                {% for prod in pairedProducts %}
+                  {% assign bundleProduct = all_products[prod] %}
+                    <li class="product product-single product_{{ bundleProduct.id }}">
+                      <div class="pdp-upsell__product-image">
+                        <img src="{{ bundleProduct.featured_image | img_url: '300x' }}" alt="{{ bundleProduct.title }}" />
+                      </div>
+
+                      <div class="pdp-upsell__form">
+                        <div class="pdp-upsell__product-title">
+                          <a href="{{ bundleProduct.url }}">
+                            <h2>{{ bundleProduct.title }}</h2>
+                          </a>
+                          <div class="price_and_plus"> 
+                            <p class="product__price">{{ bundleProduct.price | money}}</p>
+                          </div>
+                        </div>
+
+                        {% capture "form_classes" -%}
+                          product-form product-form-{{ section.id }}-{{bundleProduct.id }}
+                          pdp-upsell-product-form
+                          {%- if bundleProduct.has_only_default_variant %} product-form--payment-button-no-variants {%- endif -%}
+                          {%- if bundleProduct.available == false %} product-form--variant-sold-out {%- endif -%}
+                        {%- endcapture %}
+                        {% assign hasBloodDraw = false %}
+                        {% form 'product', bundleProduct, class: form_classes, novalidate: 'novalidate', data-product-form: '', data-product-handle: bundleProduct.handle, data-product-title: bundleProduct.title %}
+                          {% unless bundleProduct.has_only_default_variant %}
+                            <div class="product-form__controls-group">
+                              {% for option in bundleProduct.options_with_values %}
+                                {% assign option_name = option.name | downcase %}
+                                {% if option_name == 'blood draw' %}
+                                  {% assign hasBloodDraw = true %}
+                                {% endif %}
+
+                                {% if option_name == 'addon' %}
+                                  <input type="hidden" id="SingleOptionSelector-{{forloop.index0}}_{{bundleProduct.id}}" data-index="option{{forloop.index}}_{{bundleProduct.id }}" name="options[{{option.name}}]-{{bundleProduct.title }}" data-option-position="Option{{forloop.index}}_{{bundleProduct.id }}" value="None">
+                                  {% continue %}
+                                {% endif %}
+
+                                <div class="selector-wrapper js product-form__item" data-option-{{option.name | handleize}}>
+                                  <label for="SingleOptionSelector-{{ forloop.index0 }}_{{bundleProduct.id}}" data-for="Option{{ option.position }}_{{bundleProduct.id}}" style="display:none">
+                                    {{ section.settings.option_label }} {{ option.name | downcase }} {{ section.settings.option_label_suffix }}
+                                  </label>
+                                  
+                                  <div class="product-form__custom-select">
+                                    {% for value in option.values %}
+                                      {% if value == "None" %}
+                                        {% continue %}
+                                      {% else %}
+                                        <button class="{% if option.selected_value == value %}selected{% endif %}" data-option-value="{{ value | escape }}">  
+                                          {% case value %}
+                                            {% when 'Blood draw in lab' %}
+                                              {% render 'blood-draw-lab' %}
+                                            {% when 'Mobile blood draw' %}
+                                              {% render 'blood-draw-mobile' %}
+                                            {% when 'Include blood test' %}
+                                              {% render 'product-include-blood-test' %}
+                                            {% when 'Analysis only' %}
+                                              {% render 'product-analysis-only' %}
+                                          {% endcase %}
+
+                                          {{ value | escape }}
+                                        </button>
+                                      {% endif %}
+                                    {% endfor %}
+                                  </div>
+
+                                  <select class="single-option-selector single-option-selector-{{ section.id }}_{{bundleProduct.id}} product-form__input"
+                                    id="SingleOptionSelector-{{ forloop.index0 }}_{{bundleProduct.id}}"
+                                    data-index="option{{ forloop.index }}_{{bundleProduct.id}}"
+                                    name="options[{{ option.name | escape }}]"
+                                    data-option-position="Option{{ option.position }}"
+                                  >
+                                    {% for value in option.values %}
+                                      <option value="{{ value | escape }}"{% if option.selected_value == value %} selected="selected"{% endif %}>{{ value }}</option>
+                                    {% endfor %}
+                                  </select>
+                                </div>
+                              {% endfor %}
+                            </div>
+                          {% endunless %}
+
+                          <select name="id" id="ProductSelect-{{ section.id }}_{{bundleProduct.id}}" class="product-form__variants no-js">
+                            {% for variant in bundleProduct.variants %}
+                              <option value="{{ variant.id }}"
+                                {%- if variant == current_variant %} selected="selected" {%- endif -%}
+                              >
+                                {{ variant.title }}  {%- if variant.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}
+                              </option>
+                            {% endfor %}
+                          </select>
+
+                          {% if hasBloodDraw == true %}
+                            <div class="product-form__locations-wrapper" data-blood-draw-location>
+                              <div class="product-form__item">
+                                <label for="bloodDraw-state_{{bundleProduct.id}}"><span data-state-label>State</span><span data-province-label style="display:none;">{{ provinceLabel }}</span></label>
+                                <select data-blood-draw-state id="bloodDraw-state_{{bundleProduct.id}}" class="product-form__input" name="properties[Province]">
+                                  
+                                </select>
+                              </div>
+
+                              <div class="product-form__item">
+                                <label for="bloodDraw-country_{{bundleProduct.id}}">Country</label>
+                                <select data-blood-draw-country id="bloodDraw-country_{{bundleProduct.id}}" class="product-form__input" data-default="United States" name="properties[Country]" data-available-countries="{{ bundleProduct.metafields.accentuate.countries }}">
+                                  {% unless bundleProduct.metafields.accentuate.countries %}
+                                    {{ country_option_tags }}
+                                  {% endunless%}
+                                </select>
+                              </div>
+                            </div>
+                          {% endif %}
+                        {% endform %}
+                      </div>
+                      <div class="pdp-upsell__product-message">
+                        {% if bundleProduct.metafields.accentuate.availability_message != blank %}
+                          <div class="info-message ">
+                            {% render 'icon-globe' %}
+                            <div class="info-message__inner">
+                              {{ bundleProduct.metafields.accentuate.availability_message }}
+                            </div>
+                          </div>
+                        {% endif %}
+
+                        {% if hasBloodDraw == true %}
+                          {% if settings.us_blood_testing_info_message != blank %}
+                            <div class="info-message info-message__us info-message__blood-draw-type">
+                              {% render 'icon-globe' %}
+                              <div class="info-message__inner">
+                                {{ settings.us_blood_testing_info_message }}
+                              </div>
+                            </div>
+                          {% endif %}
+
+                          {% if settings.canada_blood_testing_info_message != blank %}
+                            <div class="info-message info-message__canada hide info-message__blood-draw-type">
+                              {% render 'icon-globe' %}
+                              <div class="info-message__inner">
+                                {{ settings.canada_blood_testing_info_message }}
+                              </div>
+                            </div>
+                          {% endif %}
+                        {% endif %}
+
+                        {% if bundleProduct.metafields.accentuate.info_message != blank %}
+                        <div class="info-message">
+                          {% render 'icon-info' %}
+                          <div class="info-message__inner">
+                            <div class="info-message__custom">{{ bundleProduct.metafields.accentuate.info_message }}</div>
+                          </div>
+                        </div>
+                        {% endif %}
+                      </div>
+                    </li>
+                {% endfor %}
+                <li class="product product-single">
+                  <div class="pdp-upsell__product-image">
+                    <img src="{{ product.featured_image | img_url: '300x' }}" alt="{{ product.title }}" />
+                  </div>
+
+                  <div class="pdp-upsell__form">
+                    <div class="pdp-upsell__product-title">
+                      <a href="{{ product.url }}">
+                        <h2>{{ product.title }}</h2>
+                      </a>
+                      <div class="price_and_plus"> 
+                        <p class="product__price">{{ product.price | money}}</p>
+                      </div>
+                    </div>
+
+                    {% capture "form_classes" -%}
+                      product-form product-form-{{ section.id }}-{{product.id }}
+                      pdp-upsell-product-form
+                      {%- if product.has_only_default_variant %} product-form--payment-button-no-variants {%- endif -%}
+                      {%- if product.available == false %} product-form--variant-sold-out {%- endif -%}
+                    {%- endcapture %}
+                    {% assign hasBloodDraw = false %}
+                    {% form 'product', product, class: form_classes, novalidate: 'novalidate', data-product-form: '', data-product-handle: product.handle %}
+                      {% unless product.has_only_default_variant %}
+                        <div class="product-form__controls-group">
+                          {% for option in product.options_with_values %}
+                            {% assign option_name = option.name | downcase %}
+                            {% if option_name == 'blood draw' %}
+                              {% assign hasBloodDraw = true %}
+                            {% endif %}
+
+                            {% if option_name == 'addon' %}
+                              <input type="hidden" id="SingleOptionSelector-{{forloop.index0}}_{{product.id}}" data-index="option{{forloop.index}}_{{product.id }}" name="options[{{option.name}}]-{{product.title }}" data-option-position="Option{{forloop.index}}_{{product.id }}" value="None">
+                              {% continue %}
+                            {% endif %}
+
+                            <div class="selector-wrapper js product-form__item" data-option-{{option.name | handleize}}>
+                              <label for="SingleOptionSelector-{{ forloop.index0 }}_{{product.id}}" data-for="Option{{ option.position }}_{{product.id}}" style="display:none">
+                                {{ section.settings.option_label }} {{ option.name | downcase }} {{ section.settings.option_label_suffix }}
+                              </label>
+                              
+                              <div class="product-form__custom-select">
+                                {% for value in option.values %}
+                                  {% if value == "None" %}
+                                    {% continue %}
+                                  {% else %}
+                                    <button class="{% if option.selected_value == value %}selected{% endif %}" data-option-value="{{ value | escape }}">  
+                                      {% case value %}
+                                        {% when 'Blood draw in lab' %}
+                                          {% render 'blood-draw-lab' %}
+                                        {% when 'Mobile blood draw' %}
+                                          {% render 'blood-draw-mobile' %}
+                                        {% when 'Include blood test' %}
+                                          {% render 'product-include-blood-test' %}
+                                        {% when 'Analysis only' %}
+                                          {% render 'product-analysis-only' %}
+                                      {% endcase %}
+
+                                      {{ value | escape }}
+                                    </button>
+                                  {% endif %}
+                                {% endfor %}
+                              </div>
+
+                              <select class="single-option-selector single-option-selector-{{ section.id }}_{{product.id}} product-form__input"
+                                id="SingleOptionSelector-{{ forloop.index0 }}_{{product.id}}"
+                                data-index="option{{ forloop.index }}_{{product.id}}"
+                                name="options[{{ option.name | escape }}]"
+                                data-option-position="Option{{ option.position }}"
+                              >
+                                {% for value in option.values %}
+                                  <option value="{{ value | escape }}"{% if option.selected_value == value %} selected="selected"{% endif %}>{{ value }}</option>
+                                {% endfor %}
+                              </select>
+                            </div>
+                          {% endfor %}
+                        </div>
+                      {% endunless %}
+
+                      <select name="id" id="ProductSelect-{{ section.id }}_{{product.id}}" class="product-form__variants no-js">
+                        {% for variant in product.variants %}
+                          <option value="{{ variant.id }}"
+                            {%- if variant == current_variant %} selected="selected" {%- endif -%}
+                          >
+                            {{ variant.title }}  {%- if variant.available == false %} - {{ 'products.product.sold_out' | t }}{% endif %}
+                          </option>
+                        {% endfor %}
+                      </select>
+
+                      {% if hasBloodDraw == true %}
+                        <div class="product-form__locations-wrapper" data-blood-draw-location>
+                          <div class="product-form__item">
+                            <label for="bloodDraw-state_{{product.id}}"><span data-state-label>State</span><span data-province-label style="display:none;">{{ provinceLabel }}</span></label>
+                            <select data-blood-draw-state id="bloodDraw-state_{{product.id}}" class="product-form__input" name="properties[Province]">
+                              
+                            </select>
+                          </div>
+
+                          <div class="product-form__item">
+                            <label for="bloodDraw-country_{{product.id}}">Country</label>
+                            <select data-blood-draw-country id="bloodDraw-country_{{product.id}}" class="product-form__input" data-default="United States" name="properties[Country]" data-available-countries="{{ product.metafields.accentuate.countries }}">
+                              {% unless product.metafields.accentuate.countries %}
+                                {{ country_option_tags }}
+                              {% endunless%}
+                            </select>
+                          </div>
+                        </div>
+                      {% endif %}
+                    {% endform %}
+                  </div>
+                  <div class="pdp-upsell__product-message">
+                    {% if product.metafields.accentuate.availability_message != blank %}
+                      <div class="info-message ">
+                        {% render 'icon-globe' %}
+                        <div class="info-message__inner">
+                          {{ product.metafields.accentuate.availability_message }}
+                        </div>
+                      </div>
+                    {% endif %}
+
+                    {% if hasBloodDraw == true %}
+                      {% if settings.us_blood_testing_info_message != blank %}
+                        <div class="info-message info-message__us info-message__blood-draw-type">
+                          {% render 'icon-globe' %}
+                          <div class="info-message__inner">
+                            {{ settings.us_blood_testing_info_message }}
+                          </div>
+                        </div>
+                      {% endif %}
+
+                      {% if settings.canada_blood_testing_info_message != blank %}
+                        <div class="info-message info-message__canada hide info-message__blood-draw-type">
+                          {% render 'icon-globe' %}
+                          <div class="info-message__inner">
+                            {{ settings.canada_blood_testing_info_message }}
+                          </div>
+                        </div>
+                      {% endif %}
+                    {% endif %}
+
+                    {% if product.metafields.accentuate.info_message != blank %}
+                    <div class="info-message">
+                      {% render 'icon-info' %}
+                      <div class="info-message__inner">
+                        <div class="info-message__custom">{{ product.metafields.accentuate.info_message }}</div>
+                      </div>
+                    </div>
+                    {% endif %}
+                  </div>
+                </li>
+              </ul>
+            </div>
+        </main>
+        <footer class="micro-modal__footer">
+          <div class="pdp-upsell__total">
+            $00.00
+          </div>
+          <div class="pdp-upsell__button">
+              <button class="button button--primary" id="getUpsellFormdata">
+                  <span class="add-to-cart-text">
+                    {{ 'products.product.add_to_cart' | t }}
+                  </span>
+                  <span class="hide" data-loader>
+                    {% render 'icon-spinner' %}
+                  </span>
+              </button>
+          </div> 
+        </footer>
+      </div>
+    </div>
+  </div>

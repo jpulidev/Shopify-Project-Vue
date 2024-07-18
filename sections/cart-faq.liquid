@@ -1,0 +1,57 @@
+<div class="product-faqs__inner">
+    <div data-section-type="faq" data-section-id="{{ section.id}}">
+        {%- if section.settings.title != "" -%}
+            <h3 class="product-faqs__headline">{{ section.settings.title }}</h3>
+        {%- endif -%}
+    
+        <div class="product-faqs__inner">
+            <dl class="faqAccordion">
+                {% for faq in shop.metafields.globals.cart_faq_question %}    
+                {% if shop.metafields.globals.cart_faq_question[forloop.index0] and shop.metafields.globals.cart_faq_answer[forloop.index0] %}
+                    <div class="product-faqs__item-wrapper" >
+                        <dt class="product-faqs__item">
+                            <button type="button" class="product-faqs__item-question" aria-expanded="false" aria-controls="#faq-answer-{{ forloop.index }}">
+                                <span class="product-faqs__item-question--copy">
+                                    {{ shop.metafields.globals.cart_faq_question[forloop.index0] }}
+                                </span>
+                                <span class="product-faqs__item-question--icon">
+                                    {% include 'icon-chevron-down' %}
+                                </span>
+                            </button>
+                        </dt>
+                        <dd id="faq-answer-{{ forloop.index }}" class="product-faqs__item-answer" aria-hidden="true">
+                            {{ shop.metafields.globals.cart_faq_answer[forloop.index0] }}
+                        </dd>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </dl>
+        </div>
+
+        {% if section.settings.desc != blank %}
+        <div class="product-faqs__description">
+            {{ section.settings.desc }}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% schema %}
+    {
+        "name": "Cart FAQ",
+        "class": "product-faqs",
+        "settings": [
+            {
+                "type": "text",
+                "id": "title",
+                "label": "Title",
+                "default": "Frequently asked questions"
+            },
+            {
+                "type": "textarea",
+                "id": "desc",
+                "label": "Description",
+                "default": "<p>Can't find what you need? <a href='https://support.insidetracker.com/supportcenter' targer='_blank'>Visit our support center</a></p>"
+            }
+        ]
+    }
+{% endschema %}

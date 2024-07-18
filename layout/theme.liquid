@@ -1,0 +1,379 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="{{ settings.color_button }}">
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=GTM-W7LSMV6"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'GTM-W7LSMV6');
+</script>
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-W7LSMV6');</script>
+  <!-- End Google Tag Manager -->
+
+    <!-- start Mixpanel -->
+<script type="text/javascript">(function(e,b){if(!b.__SV){var a,f,i,g;window.mixpanel=b;b._i=[];b.init=function(a,e,d){function f(b,h){var a=h.split(".");2==a.length&&(b=b[a[0]],h=a[1]);b[h]=function(){b.push([h].concat(Array.prototype.slice.call(arguments,0)))}}var c=b;"undefined"!==typeof d?c=b[d]=[]:d="mixpanel";c.people=c.people||[];c.toString=function(b){var a="mixpanel";"mixpanel"!==d&&(a+="."+d);b||(a+=" (stub)");return a};c.people.toString=function(){return c.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms register register_once alias unregister identify name_tag set_config people.set people.set_once people.increment people.append people.union people.track_charge people.clear_charges people.delete_user".split(" ");
+  for(g=0;g<i.length;g++)f(c,i[g]);b._i.push([a,e,d])};b.__SV=1.2;a=e.createElement("script");a.type="text/javascript";a.async=!0;a.src="undefined"!==typeof MIXPANEL_CUSTOM_LIB_URL?MIXPANEL_CUSTOM_LIB_URL:"file:"===e.location.protocol&&"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js".match(/^\/\//)?"https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js":"//cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";f=e.getElementsByTagName("script")[0];f.parentNode.insertBefore(a,f)}})(document,window.mixpanel||[]);
+  mixpanel.init('bcde5c30a60ef7f5e261b09426370d7e');</script>
+  
+    {% if customer %}
+    <script>
+      mixpanel.identify('{{customer.id}}');
+    </script> 
+    {% endif %}
+  
+    <script type="text/javascript">
+    mixpanel.track_links("#nav a", "click nav link", {
+    "referrer": document.referrer
+    });
+    </script>
+  <!-- end Mixpanel -->
+  
+
+  <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.shopify.com" crossorigin>
+  <link rel="preconnect" href="https://monorail-edge.shopifysvc.com">
+
+  {%- assign header_font = settings.type_header_font -%}
+  {%- assign base_font = settings.type_base_font -%}
+  {%- assign base_font_bolder = base_font | font_modify: 'weight', 'bolder' -%}
+  {%- assign base_font_bold = base_font | font_modify: 'weight', 'bold' -%}
+  {%- assign base_font_italic = base_font | font_modify: 'style', 'italic' -%}
+  {%- assign base_font_bold_italic = base_font_bold | font_modify: 'style', 'italic' -%}
+  {%- assign base_font_semi_bold = base_font | font_modify: 'weight', '600' -%}
+
+  <link rel="preload" href="{{ 'theme.css' | asset_url }}" as="style">
+  <link rel="preload" as="font" href="{{ header_font | font_url }}" type="font/woff2" crossorigin>
+  <link rel="preload" as="font" href="{{ base_font | font_url }}" type="font/woff2" crossorigin>
+  <link rel="preload" as="font" href="{{ base_font_bold | font_url }}" type="font/woff2" crossorigin>
+  <link rel="preload" as="font" href="{{ base_font_semi_bold | font_url }}" type="font/woff2" crossorigin>
+  <link rel="preload" href="{{ 'theme.js' | asset_url }}" as="script">
+  <link rel="preload" href="{{ 'lazysizes.js' | asset_url }}" as="script">
+
+  {%- if canonical_url != blank  -%}
+    <link rel="canonical" href="{{ canonical_url }}">
+  {%- endif -%}
+
+  {%- if settings.favicon != blank -%}
+    <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+  {%- endif -%}
+
+  {%- capture seo_title -%}
+    {%- if request.page_type == 'search' and search.performed == true -%}
+      {{ 'general.search.heading' | t: count: search.results_count }}: {{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }}
+    {%- else -%}
+      {{ page_title }}
+    {%- endif -%}
+    {%- if current_tags -%}
+      {%- assign meta_tags = current_tags | join: ', ' -%} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}
+    {%- endif -%}
+    {%- if current_page != 1 -%}
+      &ndash; {{ 'general.meta.page' | t: page: current_page }}
+    {%- endif -%}
+    {%- assign escaped_page_title = page_title | escape -%}
+    {%- unless escaped_page_title contains shop.name -%}
+      &ndash; {{ shop.name }}
+    {%- endunless -%}
+  {%- endcapture -%}
+  <title>{{ seo_title | strip }}</title>
+
+  {%- if page_description -%}
+    <meta name="description" content="{{ page_description | escape }}">
+  {%- endif -%}
+
+  {% include 'social-meta-tags' %}
+  {% include 'css-variables' %}
+  {% include 'js-variables' %}
+  {{ 'tap-main.min.css' | asset_url | stylesheet_tag }}
+  {{ 'tap-index.min.js' | asset_url | script_tag }}
+  {% comment %} UPLOAD PRODUCTION VERSION OF VUE ONCE DONE BUILDING {% endcomment %}
+  
+  {{ 'tap-vue-theme.min.js' | asset_url | script_tag }}
+  
+
+    {% if template contains "product" %}
+      <script src="{{ 'tap-product.min.js' | asset_url }}" defer></script>
+    {% endif %}
+
+    {% if template contains "cart" %}
+      <script src="{{ 'tap-cart.min.js' | asset_url }}" defer></script>
+    {% endif %}
+
+
+  <script>
+    window.performance.mark('debut:theme_stylesheet_loaded.start');
+
+    function onLoadStylesheet() {
+      performance.mark('debut:theme_stylesheet_loaded.end');
+      performance.measure('debut:theme_stylesheet_loaded', 'debut:theme_stylesheet_loaded.start', 'debut:theme_stylesheet_loaded.end');
+
+      var url = "{{ 'theme.css' | asset_url }}";
+      var link = document.querySelector('link[href="' + url + '"]');
+      link.loaded = true;
+      link.dispatchEvent(new Event('load'));
+    }
+  </script>
+
+  <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}" type="text/css" media="print" onload="this.media='all';onLoadStylesheet()">
+
+  <style>
+    {{ header_font | font_face: font_display: 'swap' }}
+    {{ base_font | font_face: font_display: 'swap' }}
+    {{ base_font_bold | font_face: font_display: 'swap' }}
+    {{ base_font_bolder | font_face: font_display: 'swap' }}
+    {{ base_font_italic | font_face: font_display: 'swap' }}
+    {{ base_font_bold_italic | font_face: font_display: 'swap' }}
+    {{ base_font_semi_bold | font_face: font_display: 'swap' }}
+  </style>
+
+  <script>
+    var theme = {
+      breakpoints: {
+        medium: 750,
+        large: 990,
+        widescreen: 1400
+      },
+      strings: {
+        addToCart: {{ 'products.product.add_to_cart' | t | json }},
+        soldOut: {{ 'products.product.sold_out' | t | json }},
+        unavailable: {{ 'products.product.unavailable' | t | json }},
+        regularPrice: {{ 'products.product.regular_price' | t | json }},
+        salePrice: {{ 'products.product.sale_price' | t | json }},
+        sale: {{ 'products.product.on_sale' | t | json }},
+        fromLowestPrice: {{ 'products.product.from_lowest_price_html' | t: lowest_price: '[price]' | json }},
+        vendor: {{'products.product.vendor' | t | json }},
+        showMore: {{ 'general.filters.show_more' | t | json }},
+        showLess: {{ 'general.filters.show_less' | t | json }},
+        searchFor: {{ 'general.search.search_for' | t | json }},
+        addressError: {{ 'sections.map.address_error' | t | json }},
+        addressNoResults: {{ 'sections.map.address_no_results' | t | json }},
+        addressQueryLimit: {{ 'sections.map.address_query_limit_html' | t | json }},
+        authError: {{ 'sections.map.auth_error_html' | t | json }},
+        newWindow: {{ 'general.accessibility.link_messages.new_window' | t | json }},
+        external: {{ 'general.accessibility.link_messages.external' | t | json }},
+        newWindowExternal: {{ 'general.accessibility.link_messages.new_window_and_external' | t | json }},
+        removeLabel: {{ 'cart.label.remove' | t: product: '[product]' | json }},
+        update: {{ 'cart.label.update' | t | json }},
+        quantity: {{ 'cart.label.quantity' | t | json }},
+        discountedTotal: {{ 'cart.label.discounted_total' | t | json }},
+        regularTotal: {{ 'cart.label.regular_total' | t | json }},
+        priceColumn: {{ 'cart.label.price_column' | t | json }},
+        quantityMinimumMessage: {{ 'products.product.quantity_minimum_message' | t | json }},
+        cartError: {{ 'cart.general.cart_error' | t | json }},
+        removedItemMessage: {{ 'cart.general.removed_item_html' | t: quantity: '[quantity]', link: '[link]' | json }},
+        unitPrice: {{ 'products.product.unit_price_label' | t | json }},
+        unitPriceSeparator: {{ 'general.accessibility.unit_price_separator' | t | json }},
+        oneCartCount: {{ 'cart.popup.cart_count' | t: count: 1 | json }},
+        otherCartCount: {{ 'cart.popup.cart_count' | t: count: '[count]' | json }},
+        quantityLabel: {{ 'cart.popup.quantity_label' | t: quantity_count: '[count]' | json }},
+        products: {{ 'general.search.products' | t | json }},
+        loading: {{ 'general.search.loading' | t | json }},
+        number_of_results: {{ 'general.search.number_of_results' | t: result_number: '[result_number]', results_count: '[results_count]' | json }},
+        number_of_results_found: {{ 'general.search.number_of_results_found' | t: results_count: '[results_count]' | json }},
+        one_result_found: {{ 'general.search.one_result_found' | t | json }}
+      },
+      moneyFormat: {{ shop.money_format | json }},
+      moneyFormatWithCurrency: {{ shop.money_with_currency_format | json }},
+      settings: {
+        predictiveSearchEnabled: {{ settings.predictive_search_enabled | json }},
+        predictiveSearchShowPrice: {{ settings.predictive_search_show_price | json }},
+        predictiveSearchShowVendor: {{ settings.predictive_search_show_vendor | json }}
+      },
+      stylesheet: "{{ 'theme.css' | asset_url }}"
+    }
+
+    document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+
+// Need to check what all below is needed / using this section from CCC theme for adding Vue 
+     window.theme = window.theme || {};
+    theme.stylesheet = "{{ 'theme.css' | asset_url }}";
+    // theme.strings = {
+    //   stockLabel: {{ 'products.product.stock_label' | t: count: '[count]' | json }},
+    //   cartSavings: {{ 'cart.general.savings_html' | t: savings: '[savings]' | json }},
+    //   cartEmpty: {{ 'cart.general.empty' | t | json }},
+    //   cartTermsConfirmation: {{ 'cart.general.terms_confirm' | t | json }}
+    // };
+    theme.template = {{ template | json }};
+    theme.routes = {
+      home: "{{ routes.root_url }}",
+      cart: "{{ routes.cart_url }}",
+      cartAdd: "{{ routes.cart_add_url | append: '.js'}}",
+      cartChange: "{{ routes.cart_change_url }}"
+    };
+    theme.vue = {
+      availableApps: []
+    };
+    theme.settings = {
+      cartType: {{ settings.cart_type | json }},
+      moneyFormat: {{ shop.money_format | json }},
+      themeVersion: "3.0.2"
+    };
+  </script>
+
+  {{ '//ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js' | script_tag }}
+
+  {%- if request.page_type contains 'customers/' -%}
+    <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer="defer"></script>
+  {%- endif -%}
+
+  <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+  <script src="{{ 'lazysizes.js' | asset_url }}" async="async"></script>
+
+  <script type="text/javascript">
+    if (window.MSInputMethodContext && document.documentMode) {
+      var scripts = document.getElementsByTagName('script')[0];
+      var polyfill = document.createElement("script");
+      polyfill.defer = true;
+      polyfill.src = "{{ 'ie11CustomProperties.min.js' | asset_url }}";
+
+      scripts.parentNode.insertBefore(polyfill, scripts);
+    }
+  </script>
+
+  {{ content_for_header }}
+  <script src='https://www.dwin1.com/19038.js' type='text/javascript' defer='defer'></script>
+  <script type="text/javascript">
+    (function(a,b,c,d,e,f,g){e['ire_o']=c;e[c]=e[c]||function(){(e[c].a=e[c].a||[]).push(arguments)};f=d.createElement(b);g=d.getElementsByTagName(b)[0];f.async=1;f.src=a;g.parentNode.insertBefore(f,g);})('https://utt.impactcdn.com/A2981441-76b5-4267-8657-a6b7cd54559f1.js','script','ire',document,window);
+</script>
+{% render 'minmaxify-head' %}
+<script src="https://www.dwin1.com/19038.js" type="text/javascript" defer="defer"></script>
+<!-- Start of Sleeknote signup and lead generation tool - www.sleeknote.com -->
+<script id="sleeknoteScript" type="text/javascript">(function () {var sleeknoteScriptTag = document.createElement("script");sleeknoteScriptTag.type = "text/javascript";sleeknoteScriptTag.charset = "utf-8";sleeknoteScriptTag.src = ("//sleeknotecustomerscripts.sleeknote.com/21837.js");var s = document.getElementById("sleeknoteScript"); s.parentNode.insertBefore(sleeknoteScriptTag, s); })();</script>
+<!-- End of Sleeknote signup and lead generation tool - www.sleeknote.com -->
+  {% include 'optimizely' %}
+</head>
+
+<body class="template-{{ request.page_type | handle }}">
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-W7LSMV6"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+  <a class="in-page-link visually-hidden skip-link" href="#MainContent">{{ 'general.accessibility.skip_to_content' | t }}</a>
+
+  {%- if settings.enable_ajax -%}
+    {% include 'cart-popup' %}
+  {%- endif -%}
+
+  {% section 'header' %}
+
+  <div class="page-container drawer-page-content" id="PageContainer">
+
+    {% if template == "product" %}
+      {% section 'pdp-announcement-bar' %}
+    {% endif %}
+
+    <main class="main-content js-focus-hidden" id="MainContent" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {% section 'footer-new' %}
+
+    <div id="slideshow-info" class="visually-hidden" aria-hidden="true">
+      {{- 'sections.slideshow.navigation_instructions' | t -}}
+    </div>
+
+  </div>
+
+  <ul hidden>
+    <li id="a11y-refresh-page-message">{{ 'general.accessibility.refresh_page' | t }}</li>
+    <li id="a11y-selection-message">{{ 'general.accessibility.selection_help' | t }}</li>
+  </ul>
+
+
+  {% render 'modal-limit-dna' %}
+  {% render 'modal-limit-one' %}
+
+  
+  {% if settings.restricted_states %}
+  {% assign restricted_states = settings.restricted_states | split: "," %}
+  <script>
+    const RESTRICTED_STATES = [
+      {% for state in restricted_states %}
+        "{{ state }}" {% unless forloop.last %}, {% endunless %}
+      {% endfor %}
+    ]
+  </script>
+  {% endif %}
+
+  <script>
+    let currentCustomer = {%- if customer -%}'{{ customer.email }}'{%- else -%}''{%- endif -%};
+
+    let customerTags = [
+                        {%- if customer -%}
+                          {%- for tag in customer.tags -%}
+                            '{{ tag }}'{%- unless forloop.last -%}, {%- endunless -%}
+                          {%- endfor -%}
+                        {%- endif -%}
+                      ]
+  </script>
+
+  {% assign removeStates = shop.metafields.globals.remove_states | split: "|" %}
+  <script>
+    const REMOVE_STATES = [
+      {% for state in removeStates %}
+        "{{ state }}"{% unless state.forloop.last %}, {% endunless%}
+      {% endfor %}
+    ];
+  </script>
+<script>
+  (function(w, d){
+   var id='pdst-capture', n = 'script';
+   if (!d.getElementById(id)){
+     w.pdst = w.pdst || function() {(w.pdst.q = w.pdst.q || []).push(arguments);};
+     var e = d.createElement(n); e.id = id; e.async=1;
+     e.src = 'https://cdn.pdst.fm/ping.min.js';
+     var s = d.getElementsByTagName(n)[0];
+     s.parentNode.insertBefore(e, s);
+   }
+   w.pdst('conf', { key: '55da7b388c2c41e6a68c9f95fe4b2a1e' });
+   w.pdst('view');
+  })(window, document);
+</script>
+   <script type="text/javascript">
+     ire('identify',{customerId:'2981441', customerEmail:''});
+   </script>
+  
+  <!-- Start of HubSpot Embed Code -->
+<script type="text/javascript" id="hs-script-loader" async defer src="//js.hs-scripts.com/419889.js"></script>
+
+<script>
+    var hsUniqueKey = window.localStorage.getItem('hs_unique_user_id');
+    if (!hsUniqueKey) {
+        hsUniqueKey = Math.floor(Math.random() * 10000000);
+        window.localStorage.setItem('hs_unique_user_id', hsUniqueKey);
+    }
+
+    var _hsq = window._hsq = window._hsq || [];
+    _hsq.push(["identify",{
+        id: hsUniqueKey
+    }]);
+</script>
+<!-- End of HubSpot Embed Code -->
+
+  
+  <script type="text/javascript">
+usi_installed = 0; USI_installCode = function() { if (usi_installed == 0) { usi_installed = 1; var USI_headID = document.getElementsByTagName("head")[0]; var USI_installID = document.createElement('script'); USI_installID.type = 'text/javascript'; USI_installID.src = 'https://www.upsellit.com/active/insidetracker.jsp'; USI_headID.appendChild(USI_installID); } }; if (typeof(document.readyState) != "undefined" && document.readyState === "complete") { USI_installCode(); } else if (window.addEventListener){ window.addEventListener('load', USI_installCode, true); } else if (window.attachEvent) { window.attachEvent('onload', USI_installCode); } else { USI_installCode(); } setTimeout("USI_installCode()", 10000);
+</script>
+  
+  
+  <!--MNTN Tracking Pixel-->
+  <!-- INSTALL ON ALL PAGES OF SITE-->
+  <script type="text/javascript">(function(){"use strict";var e=null,b="4.0.0",n="32784",additional="term=value",t,r,i;try{t=top.document.referer!==""?encodeURIComponent(top.document.referrer.substring(0,2048)):""}catch(o){t=document.referrer!==null?document.referrer.toString().substring(0,2048):""}try{r=window&&window.top&&document.location&&window.top.location===document.location?document.location:window&&window.top&&window.top.location&&""!==window.top.location?window.top.location:document.location}catch(u){r=document.location}try{i=parent.location.href!==""?encodeURIComponent(parent.location.href.toString().substring(0,2048)):""}catch(a){try{i=r!==null?encodeURIComponent(r.toString().substring(0,2048)):""}catch(f){i=""}}var l,c=document.createElement("script"),h=null,p=document.getElementsByTagName("script"),d=Number(p.length)-1,v=document.getElementsByTagName("script")[d];if(typeof l==="undefined"){l=Math.floor(Math.random()*1e17)}h="dx.mountain.com/spx?"+"dxver="+b+"&shaid="+n+"&tdr="+t+"&plh="+i+"&cb="+l+additional;c.type="text/javascript";c.src=("https:"===document.location.protocol?"https://":"http://")+h;v.parentNode.insertBefore(c,v)})()</script>
+  
+  
+
+</body>
+</html>

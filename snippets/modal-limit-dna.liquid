@@ -1,0 +1,21 @@
+<div class="micro-modal micromodal-slide" id="limit-dna-modal" aria-hidden="true">
+    <div class="micro-modal__overlay" tabindex="-1" data-micromodal-close>
+      <div class="micro-modal__container" role="dialog" aria-modal="true" aria-labelledby="limit-dna-modal-title">
+        <header class="micro-modal__header">
+          {% render 'icon-warning' %}
+          <h2 class="micro-modal__title" id="limit-dna-modal-title">
+            {{ settings.limit_dna_headline }}
+          </h2>
+          <button class="micro-modal__close inner-mobile-close" aria-label="Close modal" data-micromodal-close></button>
+        </header>
+        <main class="micro-modal__content" id="limit-dna-modal-content">
+          {{ settings.limit_dna_body }}
+        </main>
+        <footer class="micro-modal__footer">
+          {% if template contains "cart" %}
+            <button class="button button--primary" data-micromodal-close>{{ settings.limit_dna_back }}</button>
+          {% endif %}
+        </footer>
+      </div>
+    </div>
+  </div>
